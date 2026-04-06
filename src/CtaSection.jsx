@@ -1,26 +1,55 @@
 export default function CtaSection() {
   return (
-    <div id="contact" style={{ padding: "80px 40px", textAlign: "center" }}>
-      <h2>Prêt à découvrir Jolab360?</h2>
-
-      <p style={{ fontSize: "20px", color: "#cbd5e1", marginBottom: "30px" }}>
-        Contactez Jolab pour voir comment Jolab360 peut aider votre entreprise.
-      </p>
-
-      <a
-        href="mailto:contact@jolab.ca"
+    <section id="contact" style={{ padding: "20px 28px 100px 28px" }}>
+      <div
         style={{
-          display: "inline-block",
-          padding: "15px 30px",
-          background: "white",
-          color: "#0f172a",
-          textDecoration: "none",
-          borderRadius: "10px",
-          fontWeight: "bold"
+          maxWidth: "1000px",
+          margin: "0 auto",
+          textAlign: "center",
+          background: "linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.02))",
+          border: "1px solid #1e293b",
+          borderRadius: "24px",
+          padding: "48px 28px"
         }}
       >
-        Contacter Jolab
-      </a>
-    </div>
+        <h2
+          style={{
+            fontSize: "clamp(30px, 4vw, 46px)",
+            margin: "0 0 18px 0"
+          }}
+        >
+          Prêt à découvrir comment Jolab360 peut aider votre entreprise ?
+        </h2>
+
+        <p
+          style={{
+            fontSize: "20px",
+            color: "#cbd5e1",
+            margin: "0 auto 30px auto",
+            maxWidth: "760px",
+            lineHeight: 1.7
+          }}
+        >
+          Contactez-nous pour une démonstration ou pour discuter d’une version adaptée
+          à vos besoins.
+        </p>
+
+        <a
+          href="mailto:contact@jolab.ca"
+          style={{
+            display: "inline-block",
+            padding: "16px 30px",
+            background: "white",
+            color: "#0f172a",
+            textDecoration: "none",
+            borderRadius: "12px",
+            fontWeight: "bold",
+            fontSize: "18px"
+          }}
+        >
+          Contacter Jolab
+        </a>
+      </div>
+    </section>
   );
 }
