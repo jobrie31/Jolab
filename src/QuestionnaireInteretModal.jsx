@@ -1,7 +1,4 @@
-// src/QuestionnaireInteretModal.jsx
 import React, { useEffect, useMemo, useState } from "react";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { db } from "./firebaseConfig";
 
 const nbEmployesOptions = ["1 à 5", "6 à 10", "10 à 20", "20 et +"];
 
@@ -13,6 +10,9 @@ const initialForm = {
   nbEmployes: "",
   commentaires: "",
 };
+
+const FUNCTION_URL =
+  "https://us-central1-jolab-14e57.cloudfunctions.net/submitQuestionnaireInteret";
 
 export default function QuestionnaireInteretModal({
   open = false,
@@ -65,6 +65,7 @@ export default function QuestionnaireInteretModal({
   async function handleSubmit(e) {
     e.preventDefault();
     setError("");
+    setSuccess(false);
 
     if (!form.nom.trim()) {
       setError("Veuillez entrer votre nom.");
@@ -89,55 +90,35 @@ export default function QuestionnaireInteretModal({
     try {
       setSending(true);
 
-      const payload = {
-        nom: form.nom.trim(),
-        email: form.email.trim(),
-        telephone: form.telephone.trim(),
-        nomEntreprise: form.nomEntreprise.trim(),
-        nbEmployes: form.nbEmployes,
-        commentaires: form.commentaires.trim(),
-        source,
-        statut: "nouveau",
-        createdAt: serverTimestamp(),
-      };
-
-      // 1) Sauvegarde dans ta collection habituelle
-      await addDoc(collection(db, "questionnairesInteret"), payload);
-
-      // 2) Déclenchement de l'email via l'extension Firebase "Trigger Email"
-      await addDoc(collection(db, "mail"), {
-        to: "jobrie31@hotmail.com",
-        message: {
-          subject: "Nouveau formulaire d’intérêt reçu",
-          text:
-            `Un nouveau formulaire a été envoyé.\n\n` +
-            `Nom: ${payload.nom || "-"}\n` +
-            `Courriel: ${payload.email || "-"}\n` +
-            `Téléphone: ${payload.telephone || "-"}\n` +
-            `Entreprise: ${payload.nomEntreprise || "-"}\n` +
-            `Nombre d’employés: ${payload.nbEmployes || "-"}\n` +
-            `Commentaires: ${payload.commentaires || "-"}\n` +
-            `Source: ${payload.source || "-"}\n`,
-          html: `
-            <div style="font-family:Arial,sans-serif;line-height:1.6;color:#0f172a">
-              <h2 style="margin:0 0 16px 0;">Nouveau formulaire d’intérêt reçu</h2>
-              <p><strong>Nom :</strong> ${escapeHtml(payload.nom || "-")}</p>
-              <p><strong>Courriel :</strong> ${escapeHtml(payload.email || "-")}</p>
-              <p><strong>Téléphone :</strong> ${escapeHtml(payload.telephone || "-")}</p>
-              <p><strong>Entreprise :</strong> ${escapeHtml(payload.nomEntreprise || "-")}</p>
-              <p><strong>Nombre d’employés :</strong> ${escapeHtml(payload.nbEmployes || "-")}</p>
-              <p><strong>Commentaires :</strong><br>${escapeHtml(payload.commentaires || "-").replace(/\n/g, "<br>")}</p>
-              <p><strong>Source :</strong> ${escapeHtml(payload.source || "-")}</p>
-            </div>
-          `,
+      const response = await fetch(FUNCTION_URL, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
+        body: JSON.stringify({
+          nom: form.nom.trim(),
+          email: form.email.trim(),
+          telephone: form.telephone.trim(),
+          nomEntreprise: form.nomEntreprise.trim(),
+          nbEmployes: form.nbEmployes,
+          commentaires: form.commentaires.trim(),
+          source,
+        }),
       });
+
+      const result = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(
+          result?.error || "Une erreur est survenue pendant l’envoi."
+        );
+      }
 
       setSuccess(true);
       setForm(initialForm);
     } catch (err) {
-      console.error(err);
-      setError("Une erreur est survenue pendant l’envoi. Réessayez.");
+      console.error("Erreur envoi questionnaire:", err);
+      setError(err?.message || "Une erreur est survenue pendant l’envoi. Réessayez.");
     } finally {
       setSending(false);
     }
@@ -250,15 +231,6 @@ export default function QuestionnaireInteretModal({
       </div>
     </div>
   );
-}
-
-function escapeHtml(str) {
-  return String(str)
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
 }
 
 function Field({
