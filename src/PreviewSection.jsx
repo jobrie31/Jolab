@@ -33,48 +33,50 @@ export default function PreviewSection() {
   ];
 
   return (
-    <section id="aperçu" style={{ padding: "10px 28px 80px 28px" }}>
+    <section id="aperçu" style={{ padding: "18px 24px 84px 24px" }}>
       <style>
         {`
           .preview-steps-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 20px;
+            gap: 22px;
           }
 
           .preview-step-card {
             position: relative;
-            background: linear-gradient(180deg, rgba(255,255,255,0.05), rgba(255,255,255,0.025));
-            border: 1px solid #243041;
-            border-radius: 20px;
-            padding: 24px;
+            background: linear-gradient(180deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+            border: 1px solid #334155;
+            border-radius: 22px;
+            padding: 26px 22px;
             transition: transform 0.22s ease, border-color 0.22s ease, box-shadow 0.22s ease;
+            box-shadow: 0 12px 28px rgba(0,0,0,0.16);
+            text-align: center;
           }
 
           .preview-step-card:hover {
             transform: translateY(-4px);
-            border-color: #3b82f6;
-            box-shadow: 0 16px 36px rgba(0,0,0,0.24);
+            border-color: #60a5fa;
+            box-shadow: 0 16px 34px rgba(0,0,0,0.22);
           }
 
           .preview-step-badge {
-            width: 54px;
-            height: 54px;
+            width: 60px;
+            height: 60px;
             border-radius: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 900;
-            font-size: 18px;
-            margin-bottom: 18px;
+            font-size: 20px;
+            margin: 0 auto 18px auto;
             color: white;
             background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            box-shadow: 0 10px 24px rgba(37,99,235,0.35);
+            box-shadow: 0 10px 22px rgba(37,99,235,0.3);
           }
 
           .preview-step-card.featured .preview-step-badge {
             background: linear-gradient(135deg, #f59e0b, #ea580c);
-            box-shadow: 0 10px 24px rgba(245,158,11,0.35);
+            box-shadow: 0 10px 22px rgba(245,158,11,0.3);
           }
 
           @media (max-width: 980px) {
@@ -94,10 +96,10 @@ export default function PreviewSection() {
       <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
         <div
           style={{
-            background: "linear-gradient(180deg, rgba(30,41,59,0.95), rgba(15,23,42,0.95))",
-            border: "1px solid #1e293b",
+            background: "linear-gradient(180deg, rgba(30,41,59,0.96), rgba(15,23,42,0.98))",
+            border: "1px solid #334155",
             borderRadius: "24px",
-            padding: "32px"
+            padding: "30px"
           }}
         >
           <div style={{ marginBottom: "30px", textAlign: "center" }}>
@@ -106,8 +108,9 @@ export default function PreviewSection() {
                 color: "#94a3b8",
                 fontSize: "15px",
                 textTransform: "uppercase",
-                letterSpacing: "0.12em",
-                marginBottom: "12px"
+                letterSpacing: "0.14em",
+                marginBottom: "14px",
+                fontWeight: 700
               }}
             >
               Les étapes simples vers une entreprise optimisée
@@ -115,8 +118,14 @@ export default function PreviewSection() {
 
             <h2
               style={{
-                fontSize: "clamp(30px, 4vw, 42px)",
-                margin: "0 0 14px 0"
+                fontSize: "clamp(32px, 4vw, 48px)",
+                lineHeight: 1.08,
+                margin: "0 0 14px 0",
+                color: "white",
+                fontWeight: 900,
+                letterSpacing: "-0.03em",
+                textWrap: "balance",
+                textAlign: "center"
               }}
             >
               Un processus simple et pensé pour votre entreprise
@@ -124,11 +133,13 @@ export default function PreviewSection() {
 
             <p
               style={{
-                color: "#cbd5e1",
-                fontSize: "18px",
-                lineHeight: 1.7,
+                color: "#dbe4f0",
+                fontSize: "clamp(17px, 1.8vw, 21px)",
+                lineHeight: 1.65,
                 margin: "0 auto",
-                maxWidth: "900px"
+                maxWidth: "880px",
+                fontWeight: 500,
+                textAlign: "center"
               }}
             >
               L’objectif : comprendre votre réalité, adapter Jolab360 à vos
@@ -147,8 +158,13 @@ export default function PreviewSection() {
                 <h3
                   style={{
                     margin: "0 0 12px 0",
-                    fontSize: "24px",
-                    lineHeight: 1.25
+                    fontSize: "clamp(21px, 2.1vw, 28px)",
+                    lineHeight: 1.2,
+                    color: "white",
+                    fontWeight: 900,
+                    letterSpacing: "-0.02em",
+                    textWrap: "balance",
+                    textAlign: "center"
                   }}
                 >
                   {step.title}
@@ -157,9 +173,11 @@ export default function PreviewSection() {
                 <p
                   style={{
                     margin: 0,
-                    color: "#cbd5e1",
-                    fontSize: "17px",
-                    lineHeight: 1.75
+                    color: "#dbe4f0",
+                    fontSize: "clamp(16px, 1.45vw, 18px)",
+                    lineHeight: 1.65,
+                    fontWeight: 500,
+                    textAlign: "center"
                   }}
                 >
                   {step.text}

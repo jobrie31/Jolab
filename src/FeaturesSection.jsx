@@ -1,16 +1,17 @@
 const cardStyle = {
-  background: "linear-gradient(180deg, rgba(30,41,59,0.95), rgba(15,23,42,0.95))",
+  background: "linear-gradient(180deg, rgba(30,41,59,0.96), rgba(15,23,42,0.98))",
   padding: "28px",
-  borderRadius: "20px",
-  border: "1px solid #1e293b",
-  boxShadow: "0 14px 34px rgba(0,0,0,0.22)"
+  borderRadius: "24px",
+  border: "1px solid #334155",
+  boxShadow: "0 16px 40px rgba(0,0,0,0.24)"
 };
 
 const screenshotCardStyle = {
-  background: "rgba(255,255,255,0.03)",
+  background: "rgba(255,255,255,0.04)",
   border: "1px solid #334155",
   borderRadius: "18px",
-  overflow: "hidden"
+  overflow: "hidden",
+  boxShadow: "0 12px 28px rgba(0,0,0,0.16)"
 };
 
 const screenshots = [
@@ -30,7 +31,7 @@ const screenshots = [
     src: "/feature-nouveau-projet.png",
     alt: "Création de projet Jolab360",
     title: "Création de projets détaillés",
-    text: "Un nouveau projet peut être créé avec toutes les informations importantes : client, unité, temps estimé, véhicule, plaque, VIN, kilométrage et notes de travail."
+    text: "Un nouveau projet peut être créé avec toutes les informations importantes, par exemple: client, unité, temps estimé, véhicule, plaque, VIN, kilométrage et notes de travail."
   },
   {
     src: "/feature-details-projet.png",
@@ -42,7 +43,7 @@ const screenshots = [
     src: "/feature-reglages.png",
     alt: "Réglages Jolab360",
     title: "Réglages faciles à adapter",
-    text: "Clients, années, marques et modèles peuvent être configurés directement dans l’application pour mieux refléter la réalité de votre entreprise."
+    text: "Par exemple: clients, années, marques et modèles peuvent être configurés directement dans l’application."
   },
   {
     src: "/feature-message-important.png",
@@ -66,13 +67,13 @@ const screenshots = [
 
 export default function FeaturesSection() {
   return (
-    <section id="caracteristiques" style={{ padding: "40px 28px 80px 28px" }}>
+    <section id="caracteristiques" style={{ padding: "52px 24px 84px 24px" }}>
       <style>
         {`
           .features-gallery-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            gap: 20px;
+            gap: 22px;
           }
 
           .admin-compta-grid {
@@ -84,7 +85,7 @@ export default function FeaturesSection() {
           .features-list-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 14px;
+            gap: 16px;
           }
 
           @media (max-width: 900px) {
@@ -104,8 +105,9 @@ export default function FeaturesSection() {
               color: "#94a3b8",
               fontSize: "15px",
               textTransform: "uppercase",
-              letterSpacing: "0.12em",
-              marginBottom: "12px"
+              letterSpacing: "0.14em",
+              marginBottom: "14px",
+              fontWeight: 700
             }}
           >
             Caractéristiques
@@ -113,117 +115,60 @@ export default function FeaturesSection() {
 
           <h2
             style={{
-              fontSize: "clamp(32px, 4vw, 46px)",
-              margin: "0 0 16px 0"
+              fontSize: "clamp(32px, 4vw, 50px)",
+              lineHeight: 1.08,
+              margin: "0 0 8px 0",
+              color: "white",
+              fontWeight: 900,
+              letterSpacing: "-0.03em",
+              textWrap: "balance",
+              textAlign: "center"
             }}
           >
             Ce que Jolab360 vous permet de faire
           </h2>
-
-          <p
-            style={{
-              color: "#cbd5e1",
-              fontSize: "18px",
-              maxWidth: "920px",
-              margin: "0 auto",
-              lineHeight: 1.7
-            }}
-          >
-            Jolab360 est un outil quotidien personnalisable conçu pour s’adapter à votre réalité, améliorer l’organisation de vos opérations et vous faire sauver du temps et de l'argent.
-          </p>
-        </div>
-
-        <div style={{ ...cardStyle, marginBottom: "22px", padding: "24px" }}>
-          <h3
-            style={{
-              marginTop: 0,
-              marginBottom: "22px",
-              fontSize: "clamp(28px, 3vw, 36px)",
-              lineHeight: 1.2
-            }}
-          >
-            Une seule plateforme pour gérer les employés et les projets
-          </h3>
-
-          <div
-            style={{
-              width: "100%",
-              overflow: "hidden",
-              borderRadius: "18px",
-              border: "1px solid #334155",
-              marginBottom: "24px",
-              background: "#0b1120"
-            }}
-          >
-            <img
-              src="/app-preview.png"
-              alt="Aperçu de l’application Jolab360"
-              style={{
-                width: "100%",
-                display: "block",
-                objectFit: "cover"
-              }}
-            />
-          </div>
-
-          <div style={{ maxWidth: "980px" }}>
-            <p
-              style={{
-                color: "#cbd5e1",
-                lineHeight: 1.85,
-                margin: 0,
-                fontSize: "18px"
-              }}
-            >
-              Avec Jolab360, les opérations de l’entreprise sont regroupées dans un seul
-              tableau de bord. On peut voir les employés, les projets en cours, les autres
-              tâches, le temps accumulé et les actions importantes à partir d’un seul endroit.
-            </p>
-
-            <p
-              style={{
-                color: "#cbd5e1",
-                lineHeight: 1.85,
-                margin: "18px 0 0 0",
-                fontSize: "18px"
-              }}
-            >
-              Au lieu de chercher l’information à plusieurs places, tout est présenté de
-              façon simple, visuelle et structurée pour permettre de suivre le temps
-              consacré à chaque projet ainsi que les dépenses qui y sont liées.
-            </p>
-
-            <p
-              style={{
-                color: "white",
-                lineHeight: 1.8,
-                marginTop: "20px",
-                fontWeight: "bold",
-                fontSize: "18px"
-              }}
-            >
-              Le résultat : moins d’erreurs, moins de confusion, plus de contrôle.
-            </p>
-          </div>
         </div>
 
         <div
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))",
+            gridTemplateColumns: "repeat(auto-fit, minmax(300px, 1fr))",
             gap: "22px",
             marginBottom: "22px"
           }}
         >
-          <div style={cardStyle}>
-            <h3 style={{ marginTop: 0, fontSize: "24px", marginBottom: "16px" }}>
+          <div style={{ ...cardStyle, textAlign: "center" }}>
+            <h3
+              style={{
+                marginTop: 0,
+                marginBottom: "16px",
+                fontSize: "clamp(24px, 2.7vw, 34px)",
+                lineHeight: 1.15,
+                color: "white",
+                fontWeight: 900,
+                letterSpacing: "-0.02em",
+                textWrap: "balance",
+                textAlign: "center"
+              }}
+            >
               Une plateforme personnalisable selon vos besoins
             </h3>
-            <p style={{ color: "#cbd5e1", lineHeight: 1.75, margin: 0 }}>
-              Jolab360 peut être adapté à votre entreprise. Il est possible d’ajouter
-              des fonctionnalités, d’en retirer, de modifier certains processus et
-              d’ajuster la plateforme selon votre réalité terrain. L’objectif est
-              d’avoir un outil qui vous ressemble vraiment.
+
+            <p
+              style={{
+                color: "#dbe4f0",
+                lineHeight: 1.65,
+                margin: "0 auto",
+                fontSize: "clamp(17px, 1.6vw, 21px)",
+                fontWeight: 500,
+                maxWidth: "900px",
+                textAlign: "center"
+              }}
+            >
+              Jolab360 peut être adapté à votre entreprise. Il est possible
+              d’ajouter des fonctionnalités, d’en retirer, de modifier certains
+              processus et d’ajuster la plateforme selon votre réalité terrain.
+              L’objectif est d’avoir un outil qui vous ressemble vraiment.
             </p>
           </div>
         </div>
@@ -232,8 +177,14 @@ export default function FeaturesSection() {
           <div style={{ textAlign: "center", marginBottom: "28px" }}>
             <h3
               style={{
-                margin: "0 0 12px 0",
-                fontSize: "clamp(28px, 3vw, 38px)"
+                margin: "0 0 14px 0",
+                fontSize: "clamp(27px, 3vw, 40px)",
+                lineHeight: 1.1,
+                color: "white",
+                fontWeight: 900,
+                letterSpacing: "-0.03em",
+                textWrap: "balance",
+                textAlign: "center"
               }}
             >
               Une application complète pour vous
@@ -241,16 +192,19 @@ export default function FeaturesSection() {
 
             <p
               style={{
-                color: "#cbd5e1",
-                fontSize: "18px",
-                lineHeight: 1.75,
+                color: "#dbe4f0",
+                fontSize: "clamp(17px, 1.7vw, 22px)",
+                lineHeight: 1.65,
                 maxWidth: "900px",
-                margin: "0 auto"
+                margin: "0 auto",
+                fontWeight: 500,
+                textAlign: "center"
               }}
             >
               De l’activation des comptes à la gestion des projets, du matériel,
-              des réglages, des messages internes et des niveaux d’accès, Jolab360
-              propose plusieurs outils réunis dans une seule plateforme cohérente.
+              des réglages, des messages internes et des niveaux d’accès,
+              Jolab360 propose plusieurs outils réunis dans une seule plateforme
+              cohérente.
             </p>
           </div>
 
@@ -268,12 +222,17 @@ export default function FeaturesSection() {
                   }}
                 />
 
-                <div style={{ padding: "20px" }}>
+                <div style={{ padding: "22px" }}>
                   <h4
                     style={{
-                      margin: "0 0 10px 0",
-                      fontSize: "22px",
-                      lineHeight: 1.25
+                      margin: "0 0 12px 0",
+                      fontSize: "clamp(21px, 2vw, 28px)",
+                      lineHeight: 1.2,
+                      color: "white",
+                      fontWeight: 900,
+                      letterSpacing: "-0.02em",
+                      textWrap: "balance",
+                      textAlign: "center"
                     }}
                   >
                     {item.title}
@@ -282,9 +241,11 @@ export default function FeaturesSection() {
                   <p
                     style={{
                       margin: 0,
-                      color: "#cbd5e1",
-                      lineHeight: 1.75,
-                      fontSize: "16px"
+                      color: "#dbe4f0",
+                      lineHeight: 1.65,
+                      fontSize: "clamp(16px, 1.45vw, 19px)",
+                      fontWeight: 500,
+                      textAlign: "left"
                     }}
                   >
                     {item.text}
@@ -295,13 +256,18 @@ export default function FeaturesSection() {
           </div>
         </div>
 
-        <div style={{ ...cardStyle, marginBottom: "22px", padding: "24px" }}>
-          <div style={{ marginBottom: "24px" }}>
+        <div style={{ ...cardStyle, marginBottom: "22px" }}>
+          <div style={{ marginBottom: "26px", textAlign: "center" }}>
             <h3
               style={{
                 margin: "0 0 14px 0",
-                fontSize: "clamp(28px, 3vw, 36px)",
-                lineHeight: 1.2
+                fontSize: "clamp(27px, 3vw, 39px)",
+                lineHeight: 1.1,
+                color: "white",
+                fontWeight: 900,
+                letterSpacing: "-0.03em",
+                textWrap: "balance",
+                textAlign: "center"
               }}
             >
               Un meilleur support pour l’administration et la comptabilité
@@ -309,16 +275,19 @@ export default function FeaturesSection() {
 
             <p
               style={{
-                color: "#cbd5e1",
-                lineHeight: 1.8,
-                margin: 0,
-                fontSize: "18px",
-                maxWidth: "980px"
+                color: "#dbe4f0",
+                lineHeight: 1.65,
+                margin: "0 auto",
+                fontSize: "clamp(17px, 1.7vw, 21px)",
+                maxWidth: "980px",
+                fontWeight: 500,
+                textAlign: "center"
               }}
             >
-              Jolab360 aide aussi à mieux soutenir les ressources humaines, la paie, la
-              comptabilité et le suivi administratif en centralisant les heures, les échanges
-              importants et les demandes de remboursement dans un environnement simple à consulter.
+              Jolab360 aide aussi à mieux soutenir les ressources humaines, la
+              paie, la comptabilité et le suivi administratif en centralisant les
+              heures, les échanges importants et les demandes de remboursement
+              dans un environnement simple à consulter.
             </p>
           </div>
 
@@ -335,12 +304,17 @@ export default function FeaturesSection() {
                 }}
               />
 
-              <div style={{ padding: "20px" }}>
+              <div style={{ padding: "22px" }}>
                 <h4
                   style={{
-                    margin: "0 0 10px 0",
-                    fontSize: "22px",
-                    lineHeight: 1.25
+                    margin: "0 0 12px 0",
+                    fontSize: "clamp(21px, 2vw, 28px)",
+                    lineHeight: 1.2,
+                    color: "white",
+                    fontWeight: 900,
+                    letterSpacing: "-0.02em",
+                    textWrap: "balance",
+                    textAlign: "center"
                   }}
                 >
                   Pensé pour les ressources humaines et la comptabilité
@@ -349,15 +323,18 @@ export default function FeaturesSection() {
                 <p
                   style={{
                     margin: 0,
-                    color: "#cbd5e1",
-                    lineHeight: 1.75,
-                    fontSize: "16px"
+                    color: "#dbe4f0",
+                    lineHeight: 1.65,
+                    fontSize: "clamp(16px, 1.45vw, 19px)",
+                    fontWeight: 500,
+                    textAlign: "left"
                   }}
                 >
-                  Ce module permet de consulter plus facilement les heures des employés,
-                  les périodes de paie, certaines notes RH et les informations importantes
-                  liées au suivi administratif. Tout est regroupé pour rendre le travail
-                  plus simple, plus clair et plus rapide.
+                  Ce module permet de consulter plus facilement les heures des
+                  employés, les périodes de paie, certaines notes RH et les
+                  informations importantes liées au suivi administratif. Tout est
+                  regroupé pour rendre le travail plus simple, plus clair et plus
+                  rapide.
                 </p>
               </div>
             </div>
@@ -374,12 +351,17 @@ export default function FeaturesSection() {
                 }}
               />
 
-              <div style={{ padding: "20px" }}>
+              <div style={{ padding: "22px" }}>
                 <h4
                   style={{
-                    margin: "0 0 10px 0",
-                    fontSize: "22px",
-                    lineHeight: 1.25
+                    margin: "0 0 12px 0",
+                    fontSize: "clamp(21px, 2vw, 28px)",
+                    lineHeight: 1.2,
+                    color: "white",
+                    fontWeight: 900,
+                    letterSpacing: "-0.02em",
+                    textWrap: "balance",
+                    textAlign: "center"
                   }}
                 >
                   Gestion des remboursements des employés
@@ -388,15 +370,17 @@ export default function FeaturesSection() {
                 <p
                   style={{
                     margin: 0,
-                    color: "#cbd5e1",
-                    lineHeight: 1.75,
-                    fontSize: "16px"
+                    color: "#dbe4f0",
+                    lineHeight: 1.65,
+                    fontSize: "clamp(16px, 1.45vw, 19px)",
+                    fontWeight: 500,
+                    textAlign: "left"
                   }}
                 >
-                  Une section dédiée permet de gérer les remboursements lorsque des employés
-                  doivent réclamer certaines dépenses ou commissions. Le suivi est centralisé
-                  par période, ce qui facilite la consultation, le traitement et l’organisation
-                  comptable.
+                  Une section dédiée permet de gérer les remboursements lorsque
+                  des employés doivent réclamer certaines dépenses ou commissions.
+                  Le suivi est centralisé par période, ce qui facilite la
+                  consultation, le traitement et l’organisation comptable.
                 </p>
               </div>
             </div>
@@ -404,11 +388,17 @@ export default function FeaturesSection() {
         </div>
 
         <div style={{ ...cardStyle, marginBottom: "22px" }}>
-          <div style={{ textAlign: "center", marginBottom: "24px" }}>
+          <div style={{ textAlign: "center", marginBottom: "26px" }}>
             <h3
               style={{
-                margin: "0 0 12px 0",
-                fontSize: "clamp(28px, 3vw, 38px)"
+                margin: "0 0 14px 0",
+                fontSize: "clamp(27px, 3vw, 40px)",
+                lineHeight: 1.1,
+                color: "white",
+                fontWeight: 900,
+                letterSpacing: "-0.03em",
+                textWrap: "balance",
+                textAlign: "center"
               }}
             >
               Une liste de fonctionnalités sans limite
@@ -416,15 +406,18 @@ export default function FeaturesSection() {
 
             <p
               style={{
-                color: "#cbd5e1",
-                fontSize: "18px",
-                lineHeight: 1.75,
-                maxWidth: "920px",
-                margin: "0 auto"
+                color: "#dbe4f0",
+                fontSize: "clamp(17px, 1.7vw, 21px)",
+                lineHeight: 1.65,
+                maxWidth: "900px",
+                margin: "0 auto",
+                fontWeight: 500,
+                textAlign: "center"
               }}
             >
-              Jolab360 peut intégrer une grande variété de fonctionnalités selon vos besoins,
-              pour bâtir une plateforme réellement utile au quotidien et adaptée à votre entreprise.
+              Jolab360 peut intégrer une grande variété de fonctionnalités selon
+              vos besoins, pour bâtir une plateforme réellement utile au
+              quotidien et adaptée à votre entreprise.
             </p>
           </div>
 
@@ -452,14 +445,20 @@ export default function FeaturesSection() {
               <div
                 key={feature}
                 style={{
-                  background: "rgba(255,255,255,0.04)",
+                  background: "rgba(255,255,255,0.05)",
                   border: "1px solid #334155",
-                  borderRadius: "14px",
-                  padding: "16px 18px",
+                  borderRadius: "16px",
+                  padding: "18px 18px",
                   color: "white",
-                  fontSize: "17px",
-                  fontWeight: 600,
-                  lineHeight: 1.45
+                  fontSize: "clamp(17px, 1.5vw, 20px)",
+                  fontWeight: 700,
+                  lineHeight: 1.4,
+                  boxShadow: "0 8px 20px rgba(0,0,0,0.14)",
+                  textAlign: "center",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  minHeight: "84px"
                 }}
               >
                 {feature}

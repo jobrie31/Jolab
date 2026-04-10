@@ -49,6 +49,7 @@ export default function QuestionnaireInteretModal({
       setError("");
       setSuccess(false);
       setSending(false);
+      setForm(initialForm);
     }
   }, [open]);
 
@@ -118,116 +119,149 @@ export default function QuestionnaireInteretModal({
       setForm(initialForm);
     } catch (err) {
       console.error("Erreur envoi questionnaire:", err);
-      setError(err?.message || "Une erreur est survenue pendant l’envoi. Réessayez.");
+      setError(
+        err?.message || "Une erreur est survenue pendant l’envoi. Réessayez."
+      );
     } finally {
       setSending(false);
     }
   }
 
-  return (
-    <div onClick={() => onClose?.()} style={overlayStyle}>
-      <div onClick={(e) => e.stopPropagation()} style={modalStyle}>
-        <div style={headerStyle}>
-          <div style={{ minWidth: 0 }}>
-            <div style={eyebrowStyle}>Demande d’information</div>
+  function handleCloseSuccess() {
+    setSuccess(false);
+    setError("");
+    setSending(false);
+    setForm(initialForm);
+    onClose?.();
+  }
 
-            <h2 style={titleStyle}>
-              Le premier pas vers une optimisation de votre entreprise.
+  return (
+    <div onClick={() => !success && onClose?.()} style={overlayStyle}>
+      <div onClick={(e) => e.stopPropagation()} style={modalStyle}>
+        {success ? (
+          <div style={successPopupWrapStyle}>
+            <div style={successIconStyle}>✓</div>
+
+            <h2 style={successPopupTitleStyle}>
+              Votre questionnaire a bien été envoyé.
             </h2>
 
-            <p style={subtitleStyle}>
-              Remplissez ce formulaire et nous pourrons vous recontacter rapidement.
+            <p style={successPopupTextStyle}>
+              Vous aurez un suivi dans les 48 prochaines heures ouvrables.
             </p>
+
+            <button
+              type="button"
+              onClick={handleCloseSuccess}
+              style={successPopupButtonStyle}
+            >
+              Continuer vers le site
+            </button>
           </div>
+        ) : (
+          <>
+            <div style={headerStyle}>
+              <div style={{ minWidth: 0 }}>
+                <div style={eyebrowStyle}>Nous contacter</div>
 
-          <button
-            type="button"
-            onClick={() => onClose?.()}
-            style={closeButtonStyle}
-            aria-label="Fermer"
-          >
-            ×
-          </button>
-        </div>
+                <h2 style={titleStyle}>
+                  Le premier pas vers une optimisation de votre entreprise.
+                </h2>
 
-        <form onSubmit={handleSubmit} style={formStyle}>
-          <div style={stackStyle}>
-            <Field
-              label="1. Nom *"
-              value={form.nom}
-              onChange={(v) => updateField("nom", v)}
-              placeholder="Votre nom"
-            />
+                <p style={subtitleStyle}>
+                  Remplissez ce formulaire et nous pourrons vous recontacter
+                  rapidement.
+                </p>
+              </div>
 
-            <Field
-              label="2. Adresse courriel *"
-              type="email"
-              value={form.email}
-              onChange={(v) => updateField("email", v)}
-              placeholder="nom@entreprise.com"
-            />
-
-            <Field
-              label="3. Numéro de téléphone *"
-              value={form.telephone}
-              onChange={(v) => updateField("telephone", v)}
-              placeholder="514 555-1234"
-            />
-
-            <Field
-              label="4. Nom de l’entreprise"
-              value={form.nomEntreprise}
-              onChange={(v) => updateField("nomEntreprise", v)}
-              placeholder="Nom de l’entreprise"
-            />
-
-            <SelectField
-              label="5. Nombre d’employés"
-              value={form.nbEmployes}
-              onChange={(v) => updateField("nbEmployes", v)}
-              options={nbEmployesOptions}
-            />
-
-            <TextAreaField
-              label="6. Commentaires"
-              value={form.commentaires}
-              onChange={(v) => updateField("commentaires", v)}
-              placeholder="Ajoutez un commentaire"
-              rows={4}
-            />
-          </div>
-
-          {error ? <div style={errorStyle}>{error}</div> : null}
-          {success ? (
-            <div style={successStyle}>Votre formulaire a bien été envoyé.</div>
-          ) : null}
-
-          <div style={footerStyle}>
-            <div style={requiredNoteStyle}>* Champs requis</div>
-
-            <div style={buttonsWrapStyle}>
               <button
                 type="button"
                 onClick={() => onClose?.()}
-                style={secondaryButtonStyle}
+                style={closeButtonStyle}
+                aria-label="Fermer"
               >
-                Fermer
-              </button>
-
-              <button
-                type="submit"
-                disabled={!canSubmit || sending}
-                style={{
-                  ...primaryButtonStyle,
-                  opacity: !canSubmit || sending ? 0.65 : 1,
-                  cursor: !canSubmit || sending ? "not-allowed" : "pointer",
-                }}
-              >
-                {sending ? "Envoi..." : "Envoyer"}
+                ×
               </button>
             </div>
-          </div>
-        </form>
+
+            <form onSubmit={handleSubmit} style={formStyle}>
+              <div style={stackStyle}>
+                <Field
+                  label="1. Nom *"
+                  value={form.nom}
+                  onChange={(v) => updateField("nom", v)}
+                  placeholder="Votre nom"
+                />
+
+                <Field
+                  label="2. Adresse courriel *"
+                  type="email"
+                  value={form.email}
+                  onChange={(v) => updateField("email", v)}
+                  placeholder="nom@entreprise.com"
+                />
+
+                <Field
+                  label="3. Numéro de téléphone *"
+                  value={form.telephone}
+                  onChange={(v) => updateField("telephone", v)}
+                  placeholder="514 555-1234"
+                />
+
+                <Field
+                  label="4. Nom de l’entreprise"
+                  value={form.nomEntreprise}
+                  onChange={(v) => updateField("nomEntreprise", v)}
+                  placeholder="Nom de l’entreprise"
+                />
+
+                <SelectField
+                  label="5. Nombre d’employés"
+                  value={form.nbEmployes}
+                  onChange={(v) => updateField("nbEmployes", v)}
+                  options={nbEmployesOptions}
+                />
+
+                <TextAreaField
+                  label="6. Commentaires"
+                  value={form.commentaires}
+                  onChange={(v) => updateField("commentaires", v)}
+                  placeholder="Ajoutez un commentaire"
+                  rows={4}
+                />
+              </div>
+
+              {error ? <div style={errorStyle}>{error}</div> : null}
+
+              <div style={footerStyle}>
+                <div style={requiredNoteStyle}>* Champs requis</div>
+
+                <div style={buttonsWrapStyle}>
+                  <button
+                    type="button"
+                    onClick={() => onClose?.()}
+                    style={secondaryButtonStyle}
+                  >
+                    Fermer
+                  </button>
+
+                  <button
+                    type="submit"
+                    disabled={!canSubmit || sending}
+                    style={{
+                      ...primaryButtonStyle,
+                      opacity: !canSubmit || sending ? 0.65 : 1,
+                      cursor:
+                        !canSubmit || sending ? "not-allowed" : "pointer",
+                    }}
+                  >
+                    {sending ? "Envoi..." : "Envoyer"}
+                  </button>
+                </div>
+              </div>
+            </form>
+          </>
+        )}
       </div>
     </div>
   );
@@ -427,16 +461,6 @@ const errorStyle = {
   fontSize: "14px",
 };
 
-const successStyle = {
-  marginTop: "14px",
-  padding: "12px 14px",
-  borderRadius: "14px",
-  border: "1px solid #bbf7d0",
-  background: "#f0fdf4",
-  color: "#166534",
-  fontSize: "14px",
-};
-
 const footerStyle = {
   marginTop: "16px",
   display: "flex",
@@ -479,4 +503,73 @@ const secondaryButtonStyle = {
   fontSize: "14px",
   cursor: "pointer",
   boxShadow: "0 8px 18px rgba(15, 23, 42, 0.05)",
+};
+
+const successPopupWrapStyle = {
+  padding: "42px 28px",
+  textAlign: "center",
+  display: "flex",
+  flexDirection: "column",
+  alignItems: "center",
+  justifyContent: "center",
+  minHeight: "420px",
+};
+
+const successIconStyle = {
+  width: "74px",
+  height: "74px",
+  borderRadius: "999px",
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  background: "linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)",
+  color: "#15803d",
+  fontSize: "34px",
+  fontWeight: 900,
+  marginBottom: "18px",
+  boxShadow: "0 14px 30px rgba(34, 197, 94, 0.18)",
+};
+
+const successPopupEyebrowStyle = {
+  display: "inline-block",
+  fontSize: "11px",
+  fontWeight: 800,
+  letterSpacing: "0.14em",
+  textTransform: "uppercase",
+  color: "#16a34a",
+  background: "rgba(34, 197, 94, 0.08)",
+  border: "1px solid rgba(34, 197, 94, 0.14)",
+  padding: "6px 10px",
+  borderRadius: "999px",
+  marginBottom: "14px",
+};
+
+const successPopupTitleStyle = {
+  margin: 0,
+  fontSize: "clamp(24px, 3vw, 34px)",
+  lineHeight: 1.18,
+  fontWeight: 800,
+  color: "#0f172a",
+  maxWidth: "560px",
+};
+
+const successPopupTextStyle = {
+  margin: "14px 0 0 0",
+  fontSize: "15px",
+  lineHeight: 1.7,
+  color: "#475569",
+  maxWidth: "540px",
+};
+
+const successPopupButtonStyle = {
+  marginTop: "26px",
+  border: "none",
+  background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+  color: "#ffffff",
+  padding: "14px 22px",
+  borderRadius: "14px",
+  fontWeight: 800,
+  fontSize: "15px",
+  cursor: "pointer",
+  boxShadow: "0 14px 28px rgba(37, 99, 235, 0.22)",
 };
