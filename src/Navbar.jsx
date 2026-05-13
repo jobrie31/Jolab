@@ -1,19 +1,6 @@
-import React, { useState } from "react";
-import QuestionnaireInteretModal from "./QuestionnaireInteretModal";
+import React from "react";
 
-export default function Navbar() {
-  const [questionnaireOpen, setQuestionnaireOpen] = useState(false);
-
-  function scrollToId(id) {
-    const el = document.getElementById(id);
-    if (el) {
-      el.scrollIntoView({
-        behavior: "smooth",
-        block: "start",
-      });
-    }
-  }
-
+export default function Navbar({ page, onNavigate, onOpenContact }) {
   const navLinkStyle = {
     background: "transparent",
     border: "none",
@@ -25,85 +12,102 @@ export default function Navbar() {
     padding: 0,
   };
 
+  const activeButtonStyle = {
+    background: "rgba(255,255,255,0.12)",
+    border: "1px solid rgba(255,255,255,0.18)",
+    color: "white",
+    padding: "10px 15px",
+    borderRadius: "12px",
+    fontWeight: "bold",
+    fontSize: "15px",
+    cursor: "pointer",
+  };
+
+  const logoTitle = page === "jolab360" ? "Jolab360" : "Jolab";
+  const logoSubtitle =
+    page === "jolab360"
+      ? "Solution de gestion d’opérations"
+      : "Applications web pour entreprises";
+
   return (
-    <>
-      <header
+    <header
+      style={{
+        position: "sticky",
+        top: 0,
+        zIndex: 1000,
+        background: "rgba(15, 23, 42, 0.92)",
+        backdropFilter: "blur(10px)",
+        borderBottom: "1px solid #1e293b",
+      }}
+    >
+      <div
         style={{
-          position: "sticky",
-          top: 0,
-          zIndex: 1000,
-          background: "rgba(15, 23, 42, 0.92)",
-          backdropFilter: "blur(10px)",
-          borderBottom: "1px solid #1e293b",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          padding: "16px 24px",
+          display: "flex",
+          justifyContent: "space-between",
+          alignItems: "center",
+          gap: "18px",
+          flexWrap: "wrap",
         }}
       >
-        <div
+        <button
+          type="button"
+          onClick={() => onNavigate("accueil")}
           style={{
-            maxWidth: "1200px",
-            margin: "0 auto",
-            padding: "16px 24px",
             display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
-            gap: "18px",
-            flexWrap: "wrap",
+            gap: "12px",
+            background: "transparent",
+            border: "none",
+            padding: 0,
+            cursor: "pointer",
           }}
         >
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
+          <div
             style={{
+              width: "40px",
+              height: "40px",
+              borderRadius: "12px",
+              background: "linear-gradient(135deg, #ffffff, #cbd5e1)",
+              color: "#0f172a",
               display: "flex",
               alignItems: "center",
-              gap: "12px",
-              background: "transparent",
-              border: "none",
-              padding: 0,
-              cursor: "pointer",
+              justifyContent: "center",
+              fontWeight: "bold",
+              fontSize: "19px",
+              flexShrink: 0,
             }}
           >
+            J
+          </div>
+
+          <div style={{ textAlign: "left" }}>
             <div
               style={{
-                width: "40px",
-                height: "40px",
-                borderRadius: "12px",
-                background: "linear-gradient(135deg, #ffffff, #cbd5e1)",
-                color: "#0f172a",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
+                fontSize: "18px",
                 fontWeight: "bold",
-                fontSize: "19px",
-                flexShrink: 0,
+                color: "white",
+                lineHeight: 1.1,
               }}
             >
-              J
+              {logoTitle}
             </div>
-
-            <div style={{ textAlign: "left" }}>
-              <div
-                style={{
-                  fontSize: "18px",
-                  fontWeight: "bold",
-                  color: "white",
-                  lineHeight: 1.1,
-                }}
-              >
-                Jolab360
-              </div>
-              <div
-                style={{
-                  fontSize: "12px",
-                  color: "#94a3b8",
-                  lineHeight: 1.2,
-                  marginTop: "2px",
-                }}
-              >
-                Solution de gestion d’opérations
-              </div>
+            <div
+              style={{
+                fontSize: "12px",
+                color: "#94a3b8",
+                lineHeight: 1.2,
+                marginTop: "2px",
+              }}
+            >
+              {logoSubtitle}
             </div>
-          </button>
+          </div>
+        </button>
 
+        {page === "jolab360" ? (
           <nav
             style={{
               display: "flex",
@@ -114,7 +118,31 @@ export default function Navbar() {
           >
             <button
               type="button"
-              onClick={() => scrollToId("presentation")}
+              onClick={() => onNavigate("accueil")}
+              style={navLinkStyle}
+            >
+              Accueil
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate("jolab360")}
+              style={activeButtonStyle}
+            >
+              Jolab360
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate("jolab360", "presentation")}
+              style={navLinkStyle}
+            >
+              Présentation
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate("jolab360", "caracteristiques")}
               style={navLinkStyle}
             >
               Caractéristiques
@@ -122,7 +150,7 @@ export default function Navbar() {
 
             <button
               type="button"
-              onClick={() => scrollToId("aperçu")}
+              onClick={() => onNavigate("jolab360", "aperçu")}
               style={navLinkStyle}
             >
               Étapes
@@ -130,7 +158,7 @@ export default function Navbar() {
 
             <button
               type="button"
-              onClick={() => scrollToId("tarif")}
+              onClick={() => onNavigate("jolab360", "tarif")}
               style={navLinkStyle}
             >
               Tarifs
@@ -138,7 +166,7 @@ export default function Navbar() {
 
             <button
               type="button"
-              onClick={() => setQuestionnaireOpen(true)}
+              onClick={onOpenContact}
               style={{
                 background: "white",
                 color: "#0f172a",
@@ -154,14 +182,67 @@ export default function Navbar() {
               Commencer
             </button>
           </nav>
-        </div>
-      </header>
+        ) : (
+          <nav
+            style={{
+              display: "flex",
+              alignItems: "center",
+              gap: "18px",
+              flexWrap: "wrap",
+            }}
+          >
+            <button
+              type="button"
+              onClick={() => onNavigate("accueil", "services")}
+              style={navLinkStyle}
+            >
+              Services
+            </button>
 
-      <QuestionnaireInteretModal
-        open={questionnaireOpen}
-        onClose={() => setQuestionnaireOpen(false)}
-        source="navbar_commencer"
-      />
-    </>
+            <button
+              type="button"
+              onClick={() => onNavigate("accueil", "exemples")}
+              style={navLinkStyle}
+            >
+              Exemple
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate("accueil", "avantages")}
+              style={navLinkStyle}
+            >
+              Avantages
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate("jolab360")}
+              style={activeButtonStyle}
+            >
+              Jolab360
+            </button>
+
+            <button
+              type="button"
+              onClick={onOpenContact}
+              style={{
+                background: "white",
+                color: "#0f172a",
+                padding: "11px 17px",
+                borderRadius: "12px",
+                fontWeight: "bold",
+                fontSize: "15px",
+                border: "none",
+                cursor: "pointer",
+                boxShadow: "0 10px 24px rgba(0,0,0,0.12)",
+              }}
+            >
+              Me contacter
+            </button>
+          </nav>
+        )}
+      </div>
+    </header>
   );
 }

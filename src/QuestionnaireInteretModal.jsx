@@ -136,8 +136,8 @@ export default function QuestionnaireInteretModal({
   }
 
   return (
-    <div onClick={() => !success && onClose?.()} style={overlayStyle}>
-      <div onClick={(e) => e.stopPropagation()} style={modalStyle}>
+    <div style={overlayStyle}>
+      <div style={modalStyle}>
         {success ? (
           <div style={successPopupWrapStyle}>
             <div style={successIconStyle}>✓</div>
@@ -267,13 +267,7 @@ export default function QuestionnaireInteretModal({
   );
 }
 
-function Field({
-  label,
-  value,
-  onChange,
-  placeholder = "",
-  type = "text",
-}) {
+function Field({ label, value, onChange, placeholder = "", type = "text" }) {
   return (
     <label style={fieldWrapStyle}>
       <span style={labelStyle}>{label}</span>
@@ -528,20 +522,6 @@ const successIconStyle = {
   fontWeight: 900,
   marginBottom: "18px",
   boxShadow: "0 14px 30px rgba(34, 197, 94, 0.18)",
-};
-
-const successPopupEyebrowStyle = {
-  display: "inline-block",
-  fontSize: "11px",
-  fontWeight: 800,
-  letterSpacing: "0.14em",
-  textTransform: "uppercase",
-  color: "#16a34a",
-  background: "rgba(34, 197, 94, 0.08)",
-  border: "1px solid rgba(34, 197, 94, 0.14)",
-  padding: "6px 10px",
-  borderRadius: "999px",
-  marginBottom: "14px",
 };
 
 const successPopupTitleStyle = {
