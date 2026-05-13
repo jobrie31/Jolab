@@ -40,6 +40,15 @@ const benefits = [
   "Simple à utiliser pour votre équipe",
 ];
 
+const customTags = [
+  "Vos boutons",
+  "Vos champs",
+  "Vos étapes",
+  "Vos accès",
+  "Vos rapports",
+  "Vos automatisations",
+];
+
 const blueLabelStyle = {
   color: "#2563eb",
   fontSize: "clamp(18px, 2vw, 24px)",
@@ -88,6 +97,46 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
               gap: 14px;
             }
 
+            .home-custom-tags-grid {
+              display: grid;
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+              gap: 14px;
+            }
+
+            .home-custom-card {
+              position: relative;
+              overflow: hidden;
+            }
+
+            .home-custom-card::before {
+              content: "";
+              position: absolute;
+              width: 360px;
+              height: 360px;
+              border-radius: 999px;
+              background: rgba(37, 99, 235, 0.22);
+              top: -190px;
+              right: -150px;
+              filter: blur(2px);
+            }
+
+            .home-custom-card::after {
+              content: "";
+              position: absolute;
+              width: 260px;
+              height: 260px;
+              border-radius: 999px;
+              background: rgba(147, 197, 253, 0.18);
+              bottom: -150px;
+              left: -120px;
+              filter: blur(2px);
+            }
+
+            .home-custom-content {
+              position: relative;
+              z-index: 2;
+            }
+
             @media (max-width: 980px) {
               .home-services-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -96,11 +145,16 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
               .home-benefits-grid {
                 grid-template-columns: repeat(2, minmax(0, 1fr));
               }
+
+              .home-custom-tags-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+              }
             }
 
             @media (max-width: 650px) {
               .home-services-grid,
-              .home-benefits-grid {
+              .home-benefits-grid,
+              .home-custom-tags-grid {
                 grid-template-columns: 1fr;
               }
             }
@@ -191,10 +245,138 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
         </div>
       </section>
 
-      <section id="services" style={{ padding: "40px 24px 80px 24px" }}>
+      <section id="personnalise" style={{ padding: "0 24px 80px 24px" }}>
+        <div
+          className="home-custom-card"
+          style={{
+            maxWidth: "1180px",
+            margin: "0 auto",
+            background:
+              "linear-gradient(135deg, #0f172a 0%, #1e3a8a 55%, #2563eb 100%)",
+            borderRadius: "34px",
+            padding: "52px 34px",
+            color: "white",
+            boxShadow: "0 24px 60px rgba(15,23,42,0.28)",
+            border: "1px solid rgba(255,255,255,0.18)",
+          }}
+        >
+          <div className="home-custom-content">
+            <div
+              style={{
+                textAlign: "center",
+                maxWidth: "1020px",
+                margin: "0 auto",
+              }}
+            >
+              <h2
+                style={{
+                  fontSize: "clamp(38px, 5.4vw, 64px)",
+                  lineHeight: 1.03,
+                  margin: "0 0 28px 0",
+                  fontWeight: 950,
+                  letterSpacing: "-0.055em",
+                  textWrap: "balance",
+                }}
+              >
+                Personnalisé, ça veut dire quoi ?
+              </h2>
+
+              <p
+                style={{
+                  fontSize: "clamp(23px, 2.8vw, 34px)",
+                  lineHeight: 1.38,
+                  color: "#f8fafc",
+                  maxWidth: "1000px",
+                  margin: "0 auto",
+                  fontWeight: 800,
+                  letterSpacing: "-0.03em",
+                  textWrap: "balance",
+                }}
+              >
+                Je bâtis l’application de A à Z selon votre façon de travailler.
+                Ce ne sont pas des fonctions déjà décidées d’avance.
+              </p>
+
+              <p
+                style={{
+                  fontSize: "clamp(27px, 3.4vw, 42px)",
+                  lineHeight: 1.15,
+                  color: "#bfdbfe",
+                  maxWidth: "900px",
+                  margin: "28px auto 0 auto",
+                  fontWeight: 950,
+                  letterSpacing: "-0.04em",
+                  textWrap: "balance",
+                }}
+              >
+                On choisit ensemble :
+              </p>
+            </div>
+
+            <div
+              className="home-custom-tags-grid"
+              style={{
+                marginTop: "30px",
+              }}
+            >
+              {customTags.map((item) => (
+                <div
+                  key={item}
+                  style={{
+                    background: "rgba(255,255,255,0.13)",
+                    border: "1px solid rgba(255,255,255,0.22)",
+                    borderRadius: "18px",
+                    padding: "22px 16px",
+                    textAlign: "center",
+                    fontWeight: 950,
+                    fontSize: "clamp(18px, 1.9vw, 24px)",
+                    lineHeight: 1.25,
+                    color: "#ffffff",
+                    boxShadow: "0 12px 28px rgba(15,23,42,0.14)",
+                    backdropFilter: "blur(8px)",
+                  }}
+                >
+                  {item}
+                </div>
+              ))}
+            </div>
+
+            <div
+              style={{
+                margin: "38px auto 0 auto",
+                maxWidth: "960px",
+                background: "rgba(255,255,255,0.95)",
+                color: "#0f172a",
+                borderRadius: "24px",
+                padding: "28px 26px",
+                textAlign: "center",
+                boxShadow: "0 18px 40px rgba(15,23,42,0.22)",
+                border: "1px solid rgba(255,255,255,0.85)",
+              }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: "clamp(21px, 2.7vw, 33px)",
+                  lineHeight: 1.28,
+                  fontWeight: 950,
+                  letterSpacing: "-0.035em",
+                  textWrap: "balance",
+                }}
+              >
+                Besoin d’ajouter un bouton dans 2 mois ? Une colonne ? Un
+                rapport PDF ? Un nouveau rôle employé ?{" "}
+                <span style={{ color: "#2563eb" }}>On l’ajoute.</span>
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section id="services" style={{ padding: "0 24px 80px 24px" }}>
         <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
           <div style={{ textAlign: "center", marginBottom: "34px" }}>
-            <p style={blueLabelStyle}>Ce que je fais</p>
+            <p style={blueLabelStyle}>Exemples d’outils possibles</p>
 
             <h2
               style={{
@@ -395,8 +577,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
                 fontWeight: 500,
               }}
             >
-              Une application complète de gestion d’opérations pour voir un
-              exemple concret de ce qui peut être développé.
+              Une application sur mesure qui regroupe les suivis, les documents et les rapports d’une entreprise au même endroit.
             </p>
 
             <button
