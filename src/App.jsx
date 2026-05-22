@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import Navbar from "./Navbar";
 import AccueilGeneral from "./AccueilGeneral";
 import Jolab360Page from "./Jolab360Page";
 import QuestionnaireInteretModal from "./QuestionnaireInteretModal";
@@ -36,18 +35,11 @@ export default function App() {
     <div
       style={{
         fontFamily: "Arial, sans-serif",
-        background:
-          "radial-gradient(circle at top, rgba(30,41,59,0.45), #020617 35%), #020617",
+        background: "#020617",
         color: "white",
         minHeight: "100vh",
       }}
     >
-      <Navbar
-        page={page}
-        onNavigate={navigateTo}
-        onOpenContact={() => setQuestionnaireOpen(true)}
-      />
-
       {page === "jolab360" ? (
         <Jolab360Page onOpenContact={() => setQuestionnaireOpen(true)} />
       ) : (

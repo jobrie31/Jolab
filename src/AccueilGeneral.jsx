@@ -41,12 +41,12 @@ const benefits = [
 ];
 
 const customTags = [
-  "Vos boutons",
-  "Vos champs",
-  "Vos étapes",
   "Vos accès",
-  "Vos rapports",
+  "Vos outils",
+  "Vos formulaires",
+  "Vos tableaux de bord",
   "Vos automatisations",
+  "Vos suivis",
 ];
 
 const blueLabelStyle = {
@@ -55,7 +55,7 @@ const blueLabelStyle = {
   textTransform: "uppercase",
   letterSpacing: "0.12em",
   margin: "0 0 14px 0",
-  fontWeight: 950,
+  fontWeight: 900,
 };
 
 const blueLabelDarkStyle = {
@@ -64,10 +64,17 @@ const blueLabelDarkStyle = {
   textTransform: "uppercase",
   letterSpacing: "0.12em",
   margin: "0 0 14px 0",
-  fontWeight: 950,
+  fontWeight: 900,
 };
 
 export default function AccueilGeneral({ onNavigate, onOpenContact }) {
+  const scrollToId = (id) => {
+    document.getElementById(id)?.scrollIntoView({
+      behavior: "smooth",
+      block: "start",
+    });
+  };
+
   return (
     <main
       style={{
@@ -76,178 +83,414 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
         minHeight: "100vh",
       }}
     >
-      <section
-        style={{
-          padding: "86px 24px 70px 24px",
-          background:
-            "linear-gradient(180deg, #ffffff 0%, #eef6ff 55%, #f8fafc 100%)",
-        }}
-      >
-        <style>
-          {`
-            .home-services-grid {
-              display: grid;
-              grid-template-columns: repeat(3, minmax(0, 1fr));
-              gap: 22px;
-            }
+      <style>
+        {`
+          html {
+            scroll-behavior: smooth;
+          }
 
+          .hero-majestic {
+            position: relative;
+            height: 100svh;
+            min-height: 560px;
+            overflow: hidden;
+            background: #020617;
+          }
+
+          .hero-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: 0;
+            filter: brightness(0.80) contrast(1.08) saturate(1.05);
+            transform: scale(1.02);
+          }
+
+          .hero-overlay {
+            position: absolute;
+            inset: 0;
+            z-index: 1;
+            background:
+              linear-gradient(180deg, rgba(2,6,23,0.50) 0%, rgba(2,6,23,0.80) 100%),
+              radial-gradient(circle at 50% 45%, rgba(37,99,235,0.20), transparent 58%);
+          }
+
+          .hero-shine {
+            position: absolute;
+            inset: -40%;
+            z-index: 2;
+            background:
+              radial-gradient(circle at 28% 34%, rgba(96,165,250,0.18), transparent 25%),
+              radial-gradient(circle at 72% 58%, rgba(14,165,233,0.12), transparent 28%);
+            animation: heroGlowMove 12s ease-in-out infinite alternate;
+            pointer-events: none;
+          }
+
+          .hero-nav {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px clamp(20px, 4vw, 58px);
+          }
+
+          .hero-logo {
+            color: white;
+            font-size: clamp(18px, 2vw, 28px);
+            font-weight: 850;
+            letter-spacing: 0.20em;
+            text-transform: uppercase;
+            text-shadow: 0 5px 24px rgba(0,0,0,0.65);
+          }
+
+          .hero-menu {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+          }
+
+          .hero-menu button {
+            background: rgba(255,255,255,0.07);
+            border: 1px solid rgba(255,255,255,0.14);
+            color: rgba(255,255,255,0.92);
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-size: 14px;
+            font-weight: 750;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: 0.25s ease;
+          }
+
+          .hero-menu button:hover {
+            color: white;
+            background: rgba(255,255,255,0.17);
+            transform: translateY(-2px);
+          }
+
+          .hero-content {
+            position: relative;
+            z-index: 5;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            padding: 0 24px;
+            transform: translateY(8px);
+          }
+
+          .hero-title {
+            font-family: Inter, Arial, sans-serif;
+            font-size: clamp(44px, 7vw, 92px);
+            line-height: 1.04;
+            margin: 0;
+            color: white;
+            font-weight: 650;
+            letter-spacing: -0.055em;
+            max-width: 1050px;
+            text-shadow: 0 18px 58px rgba(0,0,0,0.82);
+            opacity: 0;
+            animation: titleReveal 1.6s cubic-bezier(0.16, 1, 0.3, 1) 0.25s forwards;
+          }
+
+          .hero-title::after {
+            content: "";
+            display: block;
+            width: min(380px, 68vw);
+            height: 1px;
+            margin: 32px auto 0 auto;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.9), transparent);
+            opacity: 0;
+            animation: lineReveal 1.2s ease 1.1s forwards;
+          }
+
+          .scroll-down {
+            position: absolute;
+            bottom: 22px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            color: white;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 7px;
+            font-size: 11px;
+            font-weight: 800;
+            letter-spacing: 0.14em;
+            text-transform: uppercase;
+            opacity: 0.9;
+          }
+
+          .scroll-arrow {
+            width: 42px;
+            height: 42px;
+            border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.32);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            background: rgba(255,255,255,0.09);
+            backdrop-filter: blur(12px);
+            animation: bounceArrow 1.8s ease-in-out infinite;
+          }
+
+          .home-custom-tags-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+          }
+
+          .home-services-list {
+            display: grid;
+            gap: 28px;
+          }
+
+          .home-service-row {
+            display: grid;
+            grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 1.4fr);
+            gap: 28px;
+            align-items: center;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 30px;
+            padding: 30px;
+            box-shadow: 0 18px 42px rgba(15,23,42,0.09);
+          }
+
+          .home-service-row:nth-child(even) {
+            grid-template-columns: minmax(320px, 1.4fr) minmax(260px, 0.9fr);
+          }
+
+          .home-service-row:nth-child(even) .home-service-text {
+            order: 2;
+          }
+
+          .home-service-row:nth-child(even) .home-service-preview {
+            order: 1;
+          }
+
+          .home-service-preview {
+            min-height: 280px;
+            border-radius: 24px;
+            background:
+              radial-gradient(circle at 30% 25%, rgba(96,165,250,0.34), transparent 30%),
+              linear-gradient(135deg, #0f172a 0%, #1e293b 55%, #2563eb 100%);
+            border: 1px solid rgba(15,23,42,0.12);
+            box-shadow:
+              inset 0 0 0 1px rgba(255,255,255,0.08),
+              0 16px 34px rgba(15,23,42,0.16);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            text-align: center;
+            padding: 26px;
+            overflow: hidden;
+            position: relative;
+          }
+
+          .home-service-preview::before {
+            content: "";
+            position: absolute;
+            inset: 18px;
+            border-radius: 18px;
+            border: 1px solid rgba(255,255,255,0.16);
+            pointer-events: none;
+          }
+
+          .home-service-preview::after {
+            content: "";
+            position: absolute;
+            width: 240px;
+            height: 240px;
+            border-radius: 999px;
+            background: rgba(255,255,255,0.10);
+            filter: blur(22px);
+            top: -110px;
+            right: -90px;
+            pointer-events: none;
+          }
+
+          .home-benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 14px;
+          }
+
+          @keyframes titleReveal {
+            from {
+              opacity: 0;
+              transform: translateY(34px);
+              filter: blur(8px);
+            }
+            to {
+              opacity: 1;
+              transform: translateY(0);
+              filter: blur(0);
+            }
+          }
+
+          @keyframes lineReveal {
+            from {
+              opacity: 0;
+              transform: scaleX(0.2);
+            }
+            to {
+              opacity: 0.85;
+              transform: scaleX(1);
+            }
+          }
+
+          @keyframes bounceArrow {
+            0%, 100% {
+              transform: translateY(0);
+            }
+            50% {
+              transform: translateY(7px);
+            }
+          }
+
+          @keyframes heroGlowMove {
+            from {
+              transform: translate3d(-2%, -2%, 0) scale(1);
+            }
+            to {
+              transform: translate3d(3%, 4%, 0) scale(1.08);
+            }
+          }
+
+          @media (max-width: 980px) {
             .home-benefits-grid {
-              display: grid;
-              grid-template-columns: repeat(4, minmax(0, 1fr));
-              gap: 14px;
+              grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
             .home-custom-tags-grid {
-              display: grid;
-              grid-template-columns: repeat(3, minmax(0, 1fr));
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+
+            .home-service-row,
+            .home-service-row:nth-child(even) {
+              grid-template-columns: 1fr;
+            }
+
+            .home-service-row:nth-child(even) .home-service-text,
+            .home-service-row:nth-child(even) .home-service-preview {
+              order: initial;
+            }
+          }
+
+          @media (max-width: 760px) {
+            .hero-majestic {
+              min-height: 610px;
+            }
+
+            .hero-nav {
+              flex-direction: column;
               gap: 14px;
+              padding-top: 18px;
             }
 
-            .home-custom-card {
-              position: relative;
-              overflow: hidden;
+            .hero-menu {
+              justify-content: center;
+              gap: 8px;
             }
 
-            .home-custom-card::before {
-              content: "";
-              position: absolute;
-              width: 360px;
-              height: 360px;
-              border-radius: 999px;
-              background: rgba(37, 99, 235, 0.22);
-              top: -190px;
-              right: -150px;
-              filter: blur(2px);
+            .hero-menu button {
+              font-size: 13px;
+              padding: 9px 12px;
             }
 
-            .home-custom-card::after {
-              content: "";
-              position: absolute;
-              width: 260px;
-              height: 260px;
-              border-radius: 999px;
-              background: rgba(147, 197, 253, 0.18);
-              bottom: -150px;
-              left: -120px;
-              filter: blur(2px);
+            .hero-content {
+              transform: translateY(20px);
             }
 
-            .home-custom-content {
-              position: relative;
-              z-index: 2;
+            .home-service-row {
+              padding: 22px;
+              border-radius: 24px;
             }
 
-            @media (max-width: 980px) {
-              .home-services-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-              }
-
-              .home-benefits-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-              }
-
-              .home-custom-tags-grid {
-                grid-template-columns: repeat(2, minmax(0, 1fr));
-              }
+            .home-service-preview {
+              min-height: 220px;
             }
+          }
 
-            @media (max-width: 650px) {
-              .home-services-grid,
-              .home-benefits-grid,
-              .home-custom-tags-grid {
-                grid-template-columns: 1fr;
-              }
+          @media (max-width: 650px) {
+            .home-benefits-grid,
+            .home-custom-tags-grid {
+              grid-template-columns: 1fr;
             }
-          `}
-        </style>
+          }
+        `}
+      </style>
 
-        <div
-          style={{
-            maxWidth: "1180px",
-            margin: "0 auto",
-            textAlign: "center",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: "clamp(42px, 7vw, 76px)",
-              lineHeight: 1.02,
-              margin: "0 auto 20px auto",
-              fontWeight: 950,
-              letterSpacing: "-0.055em",
-              maxWidth: "980px",
-              color: "#0f172a",
-              textWrap: "balance",
-            }}
-          >
-            Personnalisez votre façon de travailler
-          </h1>
+      <section className="hero-majestic">
+        <video className="hero-video" autoPlay muted loop playsInline>
+          <source src="/videos/videoouverture.mp4" type="video/mp4" />
+        </video>
 
-          <p
-            style={{
-              fontSize: "clamp(19px, 2.2vw, 27px)",
-              lineHeight: 1.45,
-              color: "#334155",
-              maxWidth: "850px",
-              margin: "0 auto",
-              fontWeight: 500,
-              textWrap: "balance",
-            }}
-          >
-            Des applications simples, claires et adaptées à vos opérations.
-          </p>
+        <div className="hero-overlay" />
+        <div className="hero-shine" />
 
-          <div
-            style={{
-              marginTop: "34px",
-              display: "flex",
-              justifyContent: "center",
-              gap: "14px",
-              flexWrap: "wrap",
-            }}
-          >
-            <button
-              type="button"
-              onClick={onOpenContact}
-              style={{
-                padding: "15px 24px",
-                fontSize: "16px",
-                borderRadius: "14px",
-                background: "#0f172a",
-                color: "white",
-                fontWeight: "bold",
-                border: "none",
-                cursor: "pointer",
-                boxShadow: "0 14px 28px rgba(15,23,42,0.18)",
-              }}
-            >
-              Discuter de mon projet
+        <nav className="hero-nav">
+          <div className="hero-logo">Jolab Solutions</div>
+
+          <div className="hero-menu">
+            <button type="button" onClick={() => scrollToId("personnalise")}>
+              Sur mesure
             </button>
 
-            <button
-              type="button"
-              onClick={() => onNavigate("jolab360")}
-              style={{
-                padding: "15px 24px",
-                fontSize: "16px",
-                borderRadius: "14px",
-                background: "white",
-                color: "#0f172a",
-                fontWeight: "bold",
-                border: "1px solid #cbd5e1",
-                cursor: "pointer",
-                boxShadow: "0 10px 22px rgba(15,23,42,0.08)",
-              }}
-            >
-              Voir Jolab360
+            <button type="button" onClick={() => scrollToId("services")}>
+              Services
+            </button>
+
+            <button type="button" onClick={() => scrollToId("tarifs")}>
+              Tarifs
+            </button>
+
+            <button type="button" onClick={() => scrollToId("contact")}>
+              Contact
             </button>
           </div>
+        </nav>
+
+        <div className="hero-content">
+          <h1 className="hero-title">
+            Personnalisez votre façon de travailler
+          </h1>
         </div>
+
+        <button
+          type="button"
+          className="scroll-down"
+          onClick={() => scrollToId("personnalise")}
+        >
+          <span>Descendre</span>
+          <span className="scroll-arrow">↓</span>
+        </button>
       </section>
 
-      <section id="personnalise" style={{ padding: "0 24px 80px 24px" }}>
+      <section
+        id="personnalise"
+        style={{
+          padding: "90px 24px 80px 24px",
+          background: "#f8fafc",
+        }}
+      >
         <div
-          className="home-custom-card"
           style={{
             maxWidth: "1180px",
             margin: "0 auto",
@@ -257,126 +500,106 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             padding: "52px 34px",
             color: "white",
             boxShadow: "0 24px 60px rgba(15,23,42,0.28)",
-            border: "1px solid rgba(255,255,255,0.18)",
           }}
         >
-          <div className="home-custom-content">
-            <div
+          <div
+            style={{
+              textAlign: "center",
+              maxWidth: "1020px",
+              margin: "0 auto",
+            }}
+          >
+            <h2
               style={{
-                textAlign: "center",
-                maxWidth: "1020px",
+                fontSize: "clamp(38px, 5.4vw, 64px)",
+                lineHeight: 1.03,
+                margin: "0 0 28px 0",
+                fontWeight: 795,
+                letterSpacing: "-0.055em",
+              }}
+            >
+              Personnalisé, ça veut dire quoi ?
+            </h2>
+
+            <p
+              style={{
+                fontSize: "clamp(23px, 2.8vw, 34px)",
+                lineHeight: 1.38,
+                color: "#f8fafc",
+                maxWidth: "1000px",
                 margin: "0 auto",
+                fontWeight: 700,
               }}
             >
-              <h2
-                style={{
-                  fontSize: "clamp(38px, 5.4vw, 64px)",
-                  lineHeight: 1.03,
-                  margin: "0 0 28px 0",
-                  fontWeight: 950,
-                  letterSpacing: "-0.055em",
-                  textWrap: "balance",
-                }}
-              >
-                Personnalisé, ça veut dire quoi ?
-              </h2>
+              On bâtit votre application de A à Z.
+            </p>
 
-              <p
-                style={{
-                  fontSize: "clamp(23px, 2.8vw, 34px)",
-                  lineHeight: 1.38,
-                  color: "#f8fafc",
-                  maxWidth: "1000px",
-                  margin: "0 auto",
-                  fontWeight: 800,
-                  letterSpacing: "-0.03em",
-                  textWrap: "balance",
-                }}
-              >
-                Je bâtis l’application de A à Z selon votre façon de travailler.
-                Ce ne sont pas des fonctions déjà décidées d’avance.
-              </p>
-
-              <p
-                style={{
-                  fontSize: "clamp(27px, 3.4vw, 42px)",
-                  lineHeight: 1.15,
-                  color: "#bfdbfe",
-                  maxWidth: "900px",
-                  margin: "28px auto 0 auto",
-                  fontWeight: 950,
-                  letterSpacing: "-0.04em",
-                  textWrap: "balance",
-                }}
-              >
-                On choisit ensemble :
-              </p>
-            </div>
-
-            <div
-              className="home-custom-tags-grid"
+            <p
               style={{
-                marginTop: "30px",
+                fontSize: "clamp(27px, 3.4vw, 42px)",
+                lineHeight: 1.15,
+                color: "#bfdbfe",
+                maxWidth: "900px",
+                margin: "28px auto 0 auto",
+                fontWeight: 900,
               }}
             >
-              {customTags.map((item) => (
-                <div
-                  key={item}
-                  style={{
-                    background: "rgba(255,255,255,0.13)",
-                    border: "1px solid rgba(255,255,255,0.22)",
-                    borderRadius: "18px",
-                    padding: "22px 16px",
-                    textAlign: "center",
-                    fontWeight: 950,
-                    fontSize: "clamp(18px, 1.9vw, 24px)",
-                    lineHeight: 1.25,
-                    color: "#ffffff",
-                    boxShadow: "0 12px 28px rgba(15,23,42,0.14)",
-                    backdropFilter: "blur(8px)",
-                  }}
-                >
-                  {item}
-                </div>
-              ))}
-            </div>
+              On choisit vous et moi :
+            </p>
+          </div>
 
-            <div
-              style={{
-                margin: "38px auto 0 auto",
-                maxWidth: "960px",
-                background: "rgba(255,255,255,0.95)",
-                color: "#0f172a",
-                borderRadius: "24px",
-                padding: "28px 26px",
-                textAlign: "center",
-                boxShadow: "0 18px 40px rgba(15,23,42,0.22)",
-                border: "1px solid rgba(255,255,255,0.85)",
-              }}
-            >
-              <p
+          <div className="home-custom-tags-grid" style={{ marginTop: "30px" }}>
+            {customTags.map((item) => (
+              <div
+                key={item}
                 style={{
-                  margin: 0,
-                  fontSize: "clamp(21px, 2.7vw, 33px)",
-                  lineHeight: 1.28,
-                  fontWeight: 950,
-                  letterSpacing: "-0.035em",
-                  textWrap: "balance",
+                  background: "rgba(255,255,255,0.13)",
+                  border: "1px solid rgba(255,255,255,0.22)",
+                  borderRadius: "18px",
+                  padding: "22px 16px",
+                  textAlign: "center",
+                  fontWeight: 900,
+                  fontSize: "clamp(18px, 1.9vw, 24px)",
+                  color: "#ffffff",
+                  backdropFilter: "blur(8px)",
                 }}
               >
-                Besoin d’ajouter un bouton dans 2 mois ? Une colonne ? Un
-                rapport PDF ? Un nouveau rôle employé ?{" "}
-                <span style={{ color: "#2563eb" }}>On l’ajoute.</span>
-              </p>
-            </div>
+                {item}
+              </div>
+            ))}
+          </div>
+
+          <div
+            style={{
+              margin: "38px auto 0 auto",
+              maxWidth: "960px",
+              background: "rgba(255,255,255,0.95)",
+              color: "#0f172a",
+              borderRadius: "24px",
+              padding: "28px 26px",
+              textAlign: "center",
+              boxShadow: "0 18px 40px rgba(15,23,42,0.22)",
+            }}
+          >
+            <p
+              style={{
+                margin: 0,
+                fontSize: "clamp(21px, 2.7vw, 33px)",
+                lineHeight: 1.28,
+                fontWeight: 900,
+                letterSpacing: "-0.035em",
+              }}
+            >
+              On crée l’application ensemble, selon votre façon de travailler.
+            </p>
           </div>
         </div>
       </section>
 
       <section id="services" style={{ padding: "0 24px 80px 24px" }}>
         <div style={{ maxWidth: "1180px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", marginBottom: "34px" }}>
-            <p style={blueLabelStyle}>Exemples d’outils possibles</p>
+          <div style={{ textAlign: "center", marginBottom: "42px" }}>
+            <p style={blueLabelStyle}>Services</p>
 
             <h2
               style={{
@@ -384,81 +607,117 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
                 lineHeight: 1.1,
                 margin: 0,
                 color: "#0f172a",
-                fontWeight: 950,
+                fontWeight: 900,
                 letterSpacing: "-0.04em",
-                textWrap: "balance",
               }}
             >
-              Exemples d’applications qui peuvent aider votre entreprise
+              Des outils concrets pour simplifier vos opérations
             </h2>
           </div>
 
-          <div className="home-services-grid">
+          <div className="home-services-list">
             {serviceCards.map((item) => (
-              <div
-                key={item.title}
-                style={{
-                  background: "#ffffff",
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "24px",
-                  padding: "26px",
-                  boxShadow: "0 16px 34px rgba(15,23,42,0.08)",
-                  minHeight: "220px",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  textAlign: "center",
-                }}
-              >
-                <div
-                  style={{
-                    width: "62px",
-                    height: "62px",
-                    borderRadius: "18px",
-                    background: "#eff6ff",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontSize: "31px",
-                    marginBottom: "18px",
-                    border: "1px solid #dbeafe",
-                  }}
-                >
-                  {item.icon}
+              <div key={item.title} className="home-service-row">
+                <div className="home-service-text">
+                  <div
+                    style={{
+                      width: "72px",
+                      height: "72px",
+                      borderRadius: "21px",
+                      background: "#eff6ff",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                      fontSize: "36px",
+                      marginBottom: "20px",
+                      border: "1px solid #dbeafe",
+                    }}
+                  >
+                    {item.icon}
+                  </div>
+
+                  <h3
+                    style={{
+                      margin: "0 0 14px 0",
+                      fontSize: "clamp(30px, 3.4vw, 46px)",
+                      lineHeight: 1.05,
+                      fontWeight: 900,
+                      color: "#0f172a",
+                      letterSpacing: "-0.045em",
+                    }}
+                  >
+                    {item.title}
+                  </h3>
+
+                  <p
+                    style={{
+                      margin: 0,
+                      color: "#475569",
+                      fontSize: "18px",
+                      lineHeight: 1.6,
+                      fontWeight: 500,
+                    }}
+                  >
+                    {item.text}
+                  </p>
                 </div>
 
-                <h3
-                  style={{
-                    margin: "0 0 10px 0",
-                    fontSize: "clamp(22px, 2vw, 28px)",
-                    lineHeight: 1.15,
-                    fontWeight: 950,
-                    color: "#0f172a",
-                    letterSpacing: "-0.025em",
-                  }}
-                >
-                  {item.title}
-                </h3>
+                <div className="home-service-preview">
+                  <div
+                    style={{
+                      position: "relative",
+                      zIndex: 2,
+                    }}
+                  >
+                    <div
+                      style={{
+                        width: "76px",
+                        height: "76px",
+                        borderRadius: "999px",
+                        background: "rgba(255,255,255,0.16)",
+                        border: "1px solid rgba(255,255,255,0.24)",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        fontSize: "34px",
+                        margin: "0 auto 18px auto",
+                        backdropFilter: "blur(10px)",
+                      }}
+                    >
+                      ▶
+                    </div>
 
-                <p
-                  style={{
-                    margin: 0,
-                    color: "#475569",
-                    fontSize: "16px",
-                    lineHeight: 1.55,
-                    fontWeight: 500,
-                  }}
-                >
-                  {item.text}
-                </p>
+                    <div
+                      style={{
+                        fontSize: "24px",
+                        fontWeight: 900,
+                        marginBottom: "9px",
+                      }}
+                    >
+                      Exemple vidéo à venir
+                    </div>
+
+                    <div
+                      style={{
+                        color: "#dbeafe",
+                        fontSize: "16px",
+                        lineHeight: 1.5,
+                        maxWidth: "440px",
+                        margin: "0 auto",
+                      }}
+                    >
+                      Une courte vidéo pourra montrer un exemple concret de{" "}
+                      {item.title.toLowerCase()} dans une application réelle.
+                    </div>
+                  </div>
+                </div>
               </div>
             ))}
           </div>
         </div>
       </section>
 
-      <section id="avantages" style={{ padding: "0 24px 80px 24px" }}>
+      <section id="tarifs" style={{ padding: "0 24px 80px 24px" }}>
         <div
           style={{
             maxWidth: "1180px",
@@ -471,20 +730,32 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
           }}
         >
           <div style={{ textAlign: "center", marginBottom: "30px" }}>
-            <p style={blueLabelDarkStyle}>Pourquoi</p>
+            <p style={blueLabelDarkStyle}>Tarifs</p>
 
             <h2
               style={{
                 fontSize: "clamp(30px, 4vw, 46px)",
                 lineHeight: 1.1,
                 margin: 0,
-                fontWeight: 950,
-                letterSpacing: "-0.04em",
-                textWrap: "balance",
+                fontWeight: 900,
               }}
             >
-              Plus clair qu’un Excel. Plus adapté qu’un logiciel général.
+              Un projet adapté à vos besoins, pas un prix générique.
             </h2>
+
+            <p
+              style={{
+                maxWidth: "760px",
+                margin: "22px auto 0 auto",
+                color: "#cbd5e1",
+                fontSize: "18px",
+                lineHeight: 1.6,
+              }}
+            >
+              Chaque application est différente. Le prix dépend des fonctions,
+              des accès, des rapports, des automatisations et du niveau de
+              personnalisation souhaité.
+            </p>
           </div>
 
           <div className="home-benefits-grid">
@@ -501,7 +772,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
                   alignItems: "center",
                   justifyContent: "center",
                   textAlign: "center",
-                  fontWeight: 850,
+                  fontWeight: 800,
                   fontSize: "clamp(16px, 1.5vw, 19px)",
                   lineHeight: 1.35,
                 }}
@@ -513,7 +784,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
         </div>
       </section>
 
-      <section id="exemples" style={{ padding: "0 24px 80px 24px" }}>
+      <section id="contact" style={{ padding: "0 24px 90px 24px" }}>
         <div
           style={{
             maxWidth: "1180px",
@@ -533,99 +804,6 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
               textAlign: "center",
             }}
           >
-            <div
-              style={{
-                width: "74px",
-                height: "74px",
-                borderRadius: "22px",
-                background: "linear-gradient(135deg, #0f172a, #334155)",
-                color: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "34px",
-                fontWeight: 950,
-                margin: "0 auto 20px auto",
-              }}
-            >
-              J
-            </div>
-
-            <p style={blueLabelStyle}>Exemple d’application développée</p>
-
-            <h2
-              style={{
-                margin: "0 0 14px 0",
-                fontSize: "clamp(29px, 3.5vw, 44px)",
-                lineHeight: 1.1,
-                fontWeight: 950,
-                color: "#0f172a",
-                letterSpacing: "-0.04em",
-                textWrap: "balance",
-              }}
-            >
-              Jolab360
-            </h2>
-
-            <p
-              style={{
-                margin: "0 auto 24px auto",
-                color: "#475569",
-                fontSize: "18px",
-                lineHeight: 1.6,
-                maxWidth: "700px",
-                fontWeight: 500,
-              }}
-            >
-              Une application sur mesure qui regroupe les suivis, les documents et les rapports d’une entreprise au même endroit.
-            </p>
-
-            <button
-              type="button"
-              onClick={() => onNavigate("jolab360")}
-              style={{
-                padding: "14px 22px",
-                borderRadius: "14px",
-                border: "none",
-                background: "#0f172a",
-                color: "white",
-                fontWeight: 900,
-                fontSize: "16px",
-                cursor: "pointer",
-              }}
-            >
-              Découvrir Jolab360
-            </button>
-          </div>
-
-          <div
-            style={{
-              background: "#ffffff",
-              border: "1px solid #e2e8f0",
-              borderRadius: "26px",
-              padding: "32px",
-              boxShadow: "0 16px 34px rgba(15,23,42,0.08)",
-              textAlign: "center",
-            }}
-          >
-            <div
-              style={{
-                width: "74px",
-                height: "74px",
-                borderRadius: "22px",
-                background: "#eff6ff",
-                color: "#2563eb",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: "34px",
-                margin: "0 auto 20px auto",
-                border: "1px solid #dbeafe",
-              }}
-            >
-              💬
-            </div>
-
             <p style={blueLabelStyle}>Contact</p>
 
             <h2
@@ -633,10 +811,9 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
                 margin: "0 0 14px 0",
                 fontSize: "clamp(29px, 3.5vw, 44px)",
                 lineHeight: 1.1,
-                fontWeight: 950,
+                fontWeight: 900,
                 color: "#0f172a",
                 letterSpacing: "-0.04em",
-                textWrap: "balance",
               }}
             >
               Vous avez une idée ?
@@ -652,8 +829,8 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
                 fontWeight: 500,
               }}
             >
-              On regarde votre façon de travailler et on voit quel outil pourrait
-              vous faire sauver du temps.
+              On regarde votre façon de travailler et on voit quel outil
+              pourrait vous faire sauver du temps.
             </p>
 
             <button
@@ -672,6 +849,47 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             >
               Me contacter
             </button>
+          </div>
+
+          <div
+            style={{
+              background: "#ffffff",
+              border: "1px solid #e2e8f0",
+              borderRadius: "26px",
+              padding: "32px",
+              boxShadow: "0 16px 34px rgba(15,23,42,0.08)",
+            }}
+          >
+            <p style={blueLabelStyle}>Informations</p>
+
+            <h2
+              style={{
+                margin: "0 0 18px 0",
+                fontSize: "clamp(27px, 3vw, 38px)",
+                lineHeight: 1.1,
+                fontWeight: 900,
+                color: "#0f172a",
+                letterSpacing: "-0.04em",
+              }}
+            >
+              Jonathan Labrie
+            </h2>
+
+            <div
+              style={{
+                display: "grid",
+                gap: "12px",
+                color: "#334155",
+                fontSize: "18px",
+                lineHeight: 1.5,
+                fontWeight: 600,
+              }}
+            >
+              <div>📍 Québec</div>
+              <div>📞 418-330-2124</div>
+              <div>✉️ jobrie31@hotmail.com</div>
+              <div>🌐 jolabsolutions.com</div>
+            </div>
           </div>
         </div>
       </section>
