@@ -1,14 +1,10 @@
 import React, { useEffect, useMemo, useState } from "react";
 
-const nbEmployesOptions = ["1 à 5", "6 à 10", "10 à 20", "20 et +"];
-
 const initialForm = {
   nom: "",
   email: "",
   telephone: "",
-  nomEntreprise: "",
-  nbEmployes: "",
-  commentaires: "",
+  texte: "",
 };
 
 const FUNCTION_URL =
@@ -100,9 +96,9 @@ export default function QuestionnaireInteretModal({
           nom: form.nom.trim(),
           email: form.email.trim(),
           telephone: form.telephone.trim(),
-          nomEntreprise: form.nomEntreprise.trim(),
-          nbEmployes: form.nbEmployes,
-          commentaires: form.commentaires.trim(),
+          nomEntreprise: "",
+          nbEmployes: "",
+          commentaires: form.texte.trim(),
           source,
         }),
       });
@@ -137,13 +133,118 @@ export default function QuestionnaireInteretModal({
 
   return (
     <div style={overlayStyle}>
-      <div style={modalStyle}>
+      <style>
+        {`
+          @keyframes modalEntrance {
+            from {
+              opacity: 0;
+              transform: translateY(16px) scale(0.985);
+            }
+
+            to {
+              opacity: 1;
+              transform: translateY(0) scale(1);
+            }
+          }
+
+          @keyframes redDiscountPulse {
+            0%, 100% {
+              transform: scale(1);
+              box-shadow:
+                0 14px 32px rgba(220, 38, 38, 0.22),
+                0 0 0 1px rgba(255, 255, 255, 0.42);
+            }
+
+            50% {
+              transform: scale(1.012);
+              box-shadow:
+                0 20px 48px rgba(220, 38, 38, 0.36),
+                0 0 0 1px rgba(255, 255, 255, 0.68);
+            }
+          }
+
+          @keyframes softGlow {
+            0%, 100% {
+              transform: translate3d(0, 0, 0) scale(1);
+              opacity: 0.72;
+            }
+
+            50% {
+              transform: translate3d(-16px, 12px, 0) scale(1.08);
+              opacity: 1;
+            }
+          }
+
+          @media (max-width: 900px) {
+            .premium-modal-shell {
+              width: min(100%, 96vw) !important;
+              max-height: calc(100vh - 22px) !important;
+              min-height: auto !important;
+              grid-template-columns: 1fr !important;
+              overflow-y: auto !important;
+            }
+
+            .premium-modal-left {
+              min-height: auto !important;
+              padding: 34px 24px 30px 24px !important;
+              border-radius: 28px 28px 0 0 !important;
+            }
+
+            .premium-modal-right {
+              padding: 28px 24px 30px 24px !important;
+              border-radius: 0 0 28px 28px !important;
+            }
+
+            .premium-modal-title {
+              font-size: clamp(34px, 8vw, 48px) !important;
+            }
+
+            .title-line {
+              white-space: normal !important;
+            }
+
+            .premium-form-row {
+              grid-template-columns: 1fr !important;
+            }
+
+            .premium-footer {
+              flex-direction: column !important;
+              align-items: stretch !important;
+            }
+
+            .premium-buttons-wrap {
+              width: 100% !important;
+            }
+
+            .premium-buttons-wrap button {
+              flex: 1 !important;
+            }
+
+            .form-discount-banner {
+              width: 100% !important;
+              justify-content: center !important;
+              text-align: center !important;
+            }
+          }
+        `}
+      </style>
+
+      <div className="premium-modal-shell" style={modalStyle}>
         {success ? (
           <div style={successPopupWrapStyle}>
+            <button
+              type="button"
+              onClick={handleCloseSuccess}
+              style={closeButtonStyle}
+              aria-label="Fermer"
+            >
+              ×
+            </button>
+
             <div style={successIconStyle}>✓</div>
 
             <h2 style={successPopupTitleStyle}>
-              Votre questionnaire a bien été envoyé.
+              Votre demande a bien été envoyée.
             </h2>
 
             <p style={successPopupTextStyle}>
@@ -160,106 +261,107 @@ export default function QuestionnaireInteretModal({
           </div>
         ) : (
           <>
-            <div style={headerStyle}>
-              <div style={{ minWidth: 0 }}>
-                <div style={eyebrowStyle}>Nous contacter</div>
+            <button
+              type="button"
+              onClick={() => onClose?.()}
+              style={closeButtonStyle}
+              aria-label="Fermer"
+            >
+              ×
+            </button>
 
-                <h2 style={titleStyle}>
-                  Le premier pas vers une optimisation de votre entreprise.
-                </h2>
+            <section className="premium-modal-left" style={leftPanelStyle}>
+              <div style={leftGlowOneStyle} />
+              <div style={leftGlowTwoStyle} />
 
-                <p style={subtitleStyle}>
-                  Remplissez ce formulaire et nous pourrons vous recontacter
-                  rapidement.
-                </p>
-              </div>
+              <div style={brandBadgeStyle}>Jolab Solutions</div>
 
-              <button
-                type="button"
-                onClick={() => onClose?.()}
-                style={closeButtonStyle}
-                aria-label="Fermer"
-              >
-                ×
-              </button>
-            </div>
+              <h2 className="premium-modal-title" style={heroTitleStyle}>
+                <span className="title-line" style={titleLineStyle}>
+                  Parlez-nous de
+                </span>
+                <span className="title-line" style={titleLineStyle}>
+                  votre besoin
+                </span>
+              </h2>
 
-            <form onSubmit={handleSubmit} style={formStyle}>
-              <div style={stackStyle}>
-                <Field
-                  label="1. Nom *"
-                  value={form.nom}
-                  onChange={(v) => updateField("nom", v)}
-                  placeholder="Votre nom"
-                />
+              <p style={heroTextStyle}>
+                Décrivez brièvement ce que vous souhaitez créer, simplifier ou
+                automatiser.
+              </p>
+            </section>
 
-                <Field
-                  label="2. Adresse courriel *"
-                  type="email"
-                  value={form.email}
-                  onChange={(v) => updateField("email", v)}
-                  placeholder="nom@entreprise.com"
-                />
-
-                <Field
-                  label="3. Numéro de téléphone *"
-                  value={form.telephone}
-                  onChange={(v) => updateField("telephone", v)}
-                  placeholder="514 555-1234"
-                />
-
-                <Field
-                  label="4. Nom de l’entreprise"
-                  value={form.nomEntreprise}
-                  onChange={(v) => updateField("nomEntreprise", v)}
-                  placeholder="Nom de l’entreprise"
-                />
-
-                <SelectField
-                  label="5. Nombre d’employés"
-                  value={form.nbEmployes}
-                  onChange={(v) => updateField("nbEmployes", v)}
-                  options={nbEmployesOptions}
-                />
-
-                <TextAreaField
-                  label="6. Commentaires"
-                  value={form.commentaires}
-                  onChange={(v) => updateField("commentaires", v)}
-                  placeholder="Ajoutez un commentaire"
-                  rows={4}
-                />
-              </div>
-
-              {error ? <div style={errorStyle}>{error}</div> : null}
-
-              <div style={footerStyle}>
-                <div style={requiredNoteStyle}>* Champs requis</div>
-
-                <div style={buttonsWrapStyle}>
-                  <button
-                    type="button"
-                    onClick={() => onClose?.()}
-                    style={secondaryButtonStyle}
-                  >
-                    Fermer
-                  </button>
-
-                  <button
-                    type="submit"
-                    disabled={!canSubmit || sending}
-                    style={{
-                      ...primaryButtonStyle,
-                      opacity: !canSubmit || sending ? 0.65 : 1,
-                      cursor:
-                        !canSubmit || sending ? "not-allowed" : "pointer",
-                    }}
-                  >
-                    {sending ? "Envoi..." : "Envoyer"}
-                  </button>
+            <section className="premium-modal-right" style={rightPanelStyle}>
+              <form onSubmit={handleSubmit} style={formStyle}>
+                <div className="form-discount-banner" style={formDiscountStyle}>
+                  <span style={discountDotStyle} />
+                  Rabais de bienvenue de 10 % sur la première app.
                 </div>
-              </div>
-            </form>
+
+                <div style={stackStyle}>
+                  <div className="premium-form-row" style={formRowStyle}>
+                    <Field
+                      label="Nom *"
+                      value={form.nom}
+                      onChange={(v) => updateField("nom", v)}
+                      placeholder="Votre nom"
+                    />
+
+                    <Field
+                      label="Téléphone *"
+                      value={form.telephone}
+                      onChange={(v) => updateField("telephone", v)}
+                      placeholder="514 555-1234"
+                    />
+                  </div>
+
+                  <Field
+                    label="Adresse courriel *"
+                    type="email"
+                    value={form.email}
+                    onChange={(v) => updateField("email", v)}
+                    placeholder="nom@entreprise.com"
+                  />
+
+                  <TextAreaField
+                    label="Texte"
+                    value={form.texte}
+                    onChange={(v) => updateField("texte", v)}
+                    placeholder="Exemple : J’aimerais remplacer un fichier Excel, mieux suivre mes employés, gérer mon inventaire, automatiser des rapports, etc."
+                    rows={7}
+                  />
+                </div>
+
+                {error ? <div style={errorStyle}>{error}</div> : null}
+
+                <div className="premium-footer" style={footerStyle}>
+                  <div style={requiredNoteStyle}>* Champs requis</div>
+
+                  <div className="premium-buttons-wrap" style={buttonsWrapStyle}>
+                    <button
+                      type="button"
+                      onClick={() => onClose?.()}
+                      style={secondaryButtonStyle}
+                    >
+                      Fermer
+                    </button>
+
+                    <button
+                      type="submit"
+                      disabled={!canSubmit || sending}
+                      style={{
+                        ...primaryButtonStyle,
+                        opacity: !canSubmit || sending ? 0.65 : 1,
+                        cursor:
+                          !canSubmit || sending ? "not-allowed" : "pointer",
+                      }}
+                    >
+                      {sending ? "Envoi..." : "Envoyer ma demande"}
+                    </button>
+                  </div>
+                </div>
+              </form>
+            </section>
           </>
         )}
       </div>
@@ -282,26 +384,6 @@ function Field({ label, value, onChange, placeholder = "", type = "text" }) {
   );
 }
 
-function SelectField({ label, value, onChange, options = [] }) {
-  return (
-    <label style={fieldWrapStyle}>
-      <span style={labelStyle}>{label}</span>
-      <select
-        value={value}
-        onChange={(e) => onChange(e.target.value)}
-        style={inputStyle}
-      >
-        <option value="">Choisir</option>
-        {options.map((item) => (
-          <option key={item} value={item}>
-            {item}
-          </option>
-        ))}
-      </select>
-    </label>
-  );
-}
-
 function TextAreaField({
   label,
   value,
@@ -320,8 +402,9 @@ function TextAreaField({
         style={{
           ...inputStyle,
           resize: "vertical",
-          minHeight: 110,
-          paddingTop: 12,
+          minHeight: 175,
+          paddingTop: 14,
+          lineHeight: 1.55,
         }}
       />
     </label>
@@ -331,92 +414,200 @@ function TextAreaField({
 const overlayStyle = {
   position: "fixed",
   inset: 0,
-  background: "rgba(15, 23, 42, 0.55)",
-  backdropFilter: "blur(10px)",
-  zIndex: 5000,
+  background:
+    "radial-gradient(circle at 20% 10%, rgba(37,99,235,0.25), transparent 34%), radial-gradient(circle at 80% 90%, rgba(14,165,233,0.18), transparent 36%), rgba(15, 23, 42, 0.66)",
+  backdropFilter: "blur(14px)",
+  zIndex: 10000,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  padding: "20px",
+  padding: "18px",
 };
 
 const modalStyle = {
-  width: "min(760px, 100%)",
-  maxHeight: "calc(100vh - 40px)",
-  overflowY: "auto",
-  background: "linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
-  border: "1px solid #dbe7f3",
-  borderRadius: "26px",
-  boxShadow: "0 30px 80px rgba(15, 23, 42, 0.18)",
+  width: "min(1280px, 92vw)",
+  minHeight: "min(680px, calc(100vh - 70px))",
+  maxHeight: "calc(100vh - 70px)",
+  background: "#ffffff",
+  border: "1px solid rgba(255,255,255,0.72)",
+  borderRadius: "34px",
+  boxShadow:
+    "0 42px 120px rgba(2, 6, 23, 0.34), inset 0 1px 0 rgba(255,255,255,0.90)",
   color: "#0f172a",
-};
-
-const headerStyle = {
-  display: "flex",
-  justifyContent: "space-between",
-  alignItems: "flex-start",
-  gap: "16px",
-  padding: "22px 24px 14px 24px",
-  borderBottom: "1px solid #e8eef5",
-  background: "linear-gradient(135deg, #f8fbff 0%, #eef6ff 100%)",
-  position: "sticky",
-  top: 0,
-  zIndex: 1,
-};
-
-const eyebrowStyle = {
-  display: "inline-block",
-  fontSize: "11px",
-  fontWeight: 800,
-  letterSpacing: "0.14em",
-  textTransform: "uppercase",
-  color: "#2563eb",
-  background: "rgba(37, 99, 235, 0.08)",
-  border: "1px solid rgba(37, 99, 235, 0.14)",
-  padding: "6px 10px",
-  borderRadius: "999px",
-  marginBottom: "10px",
-};
-
-const titleStyle = {
-  margin: 0,
-  fontSize: "clamp(24px, 3vw, 34px)",
-  lineHeight: 1.15,
-  fontWeight: 800,
-  color: "#0f172a",
-  maxWidth: "620px",
-};
-
-const subtitleStyle = {
-  margin: "10px 0 0 0",
-  fontSize: "14px",
-  lineHeight: 1.55,
-  color: "#475569",
-  maxWidth: "620px",
+  display: "grid",
+  gridTemplateColumns: "0.95fr 1.15fr",
+  position: "relative",
+  isolation: "isolate",
+  overflow: "hidden",
+  animation: "modalEntrance 0.28s ease both",
 };
 
 const closeButtonStyle = {
-  border: "1px solid #d8e3ef",
-  background: "#ffffff",
-  color: "#334155",
+  position: "absolute",
+  top: "18px",
+  right: "18px",
+  zIndex: 20,
+  border: "1px solid rgba(15, 23, 42, 0.10)",
+  background: "rgba(255,255,255,0.92)",
+  color: "#0f172a",
   borderRadius: "14px",
   width: "42px",
   height: "42px",
   cursor: "pointer",
   fontSize: "24px",
   lineHeight: 1,
-  flexShrink: 0,
-  boxShadow: "0 8px 20px rgba(15, 23, 42, 0.06)",
+  boxShadow: "0 12px 26px rgba(15, 23, 42, 0.10)",
+  backdropFilter: "blur(12px)",
+};
+
+const leftPanelStyle = {
+  position: "relative",
+  minHeight: "680px",
+  padding: "54px 48px",
+  color: "#ffffff",
+  overflow: "hidden",
+  background:
+    "linear-gradient(145deg, rgba(15,23,42,1) 0%, rgba(30,58,138,0.96) 54%, rgba(37,99,235,0.92) 100%)",
+  borderRadius: "34px 0 0 34px",
+  display: "flex",
+  flexDirection: "column",
+  justifyContent: "flex-start",
+  alignItems: "center",
+  textAlign: "center",
+  paddingTop: "145px",
+};
+
+const leftGlowOneStyle = {
+  position: "absolute",
+  width: "390px",
+  height: "390px",
+  borderRadius: "999px",
+  top: "-140px",
+  right: "-120px",
+  background: "rgba(96,165,250,0.36)",
+  filter: "blur(34px)",
+  animation: "softGlow 8s ease-in-out infinite",
+  pointerEvents: "none",
+};
+
+const leftGlowTwoStyle = {
+  position: "absolute",
+  width: "420px",
+  height: "420px",
+  borderRadius: "999px",
+  bottom: "-180px",
+  left: "-135px",
+  background: "rgba(14,165,233,0.25)",
+  filter: "blur(38px)",
+  animation: "softGlow 10s ease-in-out infinite reverse",
+  pointerEvents: "none",
+};
+
+const brandBadgeStyle = {
+  position: "relative",
+  zIndex: 2,
+  display: "inline-flex",
+  alignItems: "center",
+  justifyContent: "center",
+  padding: "9px 13px",
+  borderRadius: "999px",
+  background: "rgba(255,255,255,0.10)",
+  border: "1px solid rgba(255,255,255,0.18)",
+  color: "rgba(255,255,255,0.92)",
+  fontSize: "12px",
+  fontWeight: 900,
+  letterSpacing: "0.13em",
+  textTransform: "uppercase",
+  backdropFilter: "blur(10px)",
+};
+
+const heroTitleStyle = {
+  position: "relative",
+  zIndex: 2,
+  margin: "38px 0 0 0",
+  fontSize: "clamp(46px, 4.4vw, 70px)",
+  lineHeight: 1.02,
+  fontWeight: 950,
+  letterSpacing: "-0.07em",
+  color: "#ffffff",
+  textShadow: "0 18px 48px rgba(0,0,0,0.34)",
+  maxWidth: "760px",
+  textAlign: "center",
+};
+
+const titleLineStyle = {
+  display: "block",
+  whiteSpace: "nowrap",
+};
+
+const heroTextStyle = {
+  position: "relative",
+  zIndex: 2,
+  margin: "24px 0 0 0",
+  fontSize: "18px",
+  lineHeight: 1.58,
+  color: "rgba(239,246,255,0.92)",
+  fontWeight: 650,
+  maxWidth: "560px",
+  textAlign: "center",
+};
+
+const rightPanelStyle = {
+  padding: "72px 54px 48px 54px",
+  background:
+    "linear-gradient(180deg, rgba(255,255,255,1) 0%, rgba(248,251,255,1) 100%)",
+  borderRadius: "0 34px 34px 0",
+  display: "flex",
+  alignItems: "center",
 };
 
 const formStyle = {
-  padding: "18px 24px 22px 24px",
+  margin: 0,
+  width: "100%",
+};
+
+const formDiscountStyle = {
+  position: "relative",
+  zIndex: 2,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  gap: "9px",
+  width: "fit-content",
+  maxWidth: "100%",
+  margin: "0 auto 26px auto",
+  padding: "13px 18px",
+  borderRadius: "999px",
+  background:
+    "linear-gradient(135deg, rgba(220,38,38,1), rgba(185,28,28,1))",
+  color: "#ffffff",
+  border: "1px solid rgba(255,255,255,0.58)",
+  fontSize: "15px",
+  fontWeight: 950,
+  textAlign: "center",
+  boxShadow: "0 14px 32px rgba(220, 38, 38, 0.22)",
+  animation: "redDiscountPulse 1.55s ease-in-out infinite",
+};
+
+const discountDotStyle = {
+  width: "9px",
+  height: "9px",
+  borderRadius: "999px",
+  background: "#ffffff",
+  boxShadow: "0 0 0 5px rgba(255,255,255,0.18)",
+  flex: "0 0 auto",
 };
 
 const stackStyle = {
   display: "grid",
   gridTemplateColumns: "1fr",
-  gap: "14px",
+  gap: "18px",
+};
+
+const formRowStyle = {
+  display: "grid",
+  gridTemplateColumns: "1fr 1fr",
+  gap: "16px",
 };
 
 const fieldWrapStyle = {
@@ -426,48 +617,53 @@ const fieldWrapStyle = {
 
 const labelStyle = {
   display: "block",
-  marginBottom: "7px",
-  fontWeight: 700,
-  fontSize: "14px",
+  marginBottom: "8px",
+  fontWeight: 850,
+  fontSize: "15px",
   color: "#1e293b",
 };
 
 const inputStyle = {
   width: "100%",
   boxSizing: "border-box",
-  padding: "12px 14px",
-  borderRadius: "14px",
+  padding: "15px 15px",
+  borderRadius: "16px",
   border: "1px solid #d7e2ee",
   background: "#ffffff",
   color: "#0f172a",
-  fontSize: "14px",
+  fontSize: "15px",
   outline: "none",
-  boxShadow: "inset 0 1px 2px rgba(15, 23, 42, 0.03)",
+  boxShadow:
+    "inset 0 1px 2px rgba(15, 23, 42, 0.03), 0 8px 18px rgba(15, 23, 42, 0.035)",
 };
 
 const errorStyle = {
-  marginTop: "14px",
-  padding: "12px 14px",
-  borderRadius: "14px",
+  marginTop: "16px",
+  padding: "13px 15px",
+  borderRadius: "16px",
   border: "1px solid #fecaca",
   background: "#fff1f2",
   color: "#b91c1c",
   fontSize: "14px",
+  fontWeight: 650,
 };
 
 const footerStyle = {
-  marginTop: "16px",
+  marginTop: "22px",
   display: "flex",
   alignItems: "center",
   justifyContent: "space-between",
-  gap: "12px",
+  gap: "14px",
   flexWrap: "wrap",
+  paddingTop: "18px",
+  borderTop: "1px solid #e8eef5",
 };
 
 const requiredNoteStyle = {
   fontSize: "13px",
   color: "#64748b",
-  fontWeight: 600,
+  fontWeight: 700,
+  lineHeight: 1.45,
 };
 
 const buttonsWrapStyle = {
@@ -478,78 +674,84 @@ const buttonsWrapStyle = {
 
 const primaryButtonStyle = {
   border: "none",
-  background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+  background: "linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%)",
   color: "white",
-  padding: "12px 18px",
-  borderRadius: "14px",
-  fontWeight: 800,
-  fontSize: "14px",
-  boxShadow: "0 14px 28px rgba(37, 99, 235, 0.22)",
+  padding: "14px 20px",
+  borderRadius: "16px",
+  fontWeight: 900,
+  fontSize: "15px",
+  boxShadow: "0 16px 32px rgba(37, 99, 235, 0.22)",
 };
 
 const secondaryButtonStyle = {
   border: "1px solid #d7e2ee",
   background: "#ffffff",
   color: "#334155",
-  padding: "12px 18px",
-  borderRadius: "14px",
-  fontWeight: 700,
-  fontSize: "14px",
+  padding: "14px 18px",
+  borderRadius: "16px",
+  fontWeight: 800,
+  fontSize: "15px",
   cursor: "pointer",
   boxShadow: "0 8px 18px rgba(15, 23, 42, 0.05)",
 };
 
 const successPopupWrapStyle = {
-  padding: "42px 28px",
+  gridColumn: "1 / -1",
+  padding: "64px 32px",
   textAlign: "center",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   justifyContent: "center",
-  minHeight: "420px",
+  minHeight: "620px",
+  background:
+    "radial-gradient(circle at 50% 0%, rgba(37,99,235,0.16), transparent 38%), linear-gradient(180deg, #ffffff 0%, #f8fbff 100%)",
+  borderRadius: "34px",
+  position: "relative",
 };
 
 const successIconStyle = {
-  width: "74px",
-  height: "74px",
+  width: "82px",
+  height: "82px",
   borderRadius: "999px",
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
   background: "linear-gradient(135deg, #dcfce7 0%, #bbf7d0 100%)",
   color: "#15803d",
-  fontSize: "34px",
-  fontWeight: 900,
-  marginBottom: "18px",
-  boxShadow: "0 14px 30px rgba(34, 197, 94, 0.18)",
+  fontSize: "38px",
+  fontWeight: 950,
+  marginBottom: "20px",
+  boxShadow: "0 16px 34px rgba(34, 197, 94, 0.20)",
 };
 
 const successPopupTitleStyle = {
   margin: 0,
-  fontSize: "clamp(24px, 3vw, 34px)",
-  lineHeight: 1.18,
-  fontWeight: 800,
+  fontSize: "clamp(30px, 4vw, 46px)",
+  lineHeight: 1.08,
+  fontWeight: 950,
+  letterSpacing: "-0.055em",
   color: "#0f172a",
-  maxWidth: "560px",
+  maxWidth: "680px",
 };
 
 const successPopupTextStyle = {
-  margin: "14px 0 0 0",
-  fontSize: "15px",
+  margin: "16px 0 0 0",
+  fontSize: "16px",
   lineHeight: 1.7,
   color: "#475569",
-  maxWidth: "540px",
+  maxWidth: "580px",
 };
 
 const successPopupButtonStyle = {
-  marginTop: "26px",
+  marginTop: "30px",
   border: "none",
-  background: "linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%)",
+  background: "linear-gradient(135deg, #0f172a 0%, #1d4ed8 100%)",
   color: "#ffffff",
-  padding: "14px 22px",
-  borderRadius: "14px",
-  fontWeight: 800,
+  padding: "15px 24px",
+  borderRadius: "16px",
+  fontWeight: 900,
   fontSize: "15px",
   cursor: "pointer",
-  boxShadow: "0 14px 28px rgba(37, 99, 235, 0.22)",
+  boxShadow: "0 16px 32px rgba(37, 99, 235, 0.24)",
 };
