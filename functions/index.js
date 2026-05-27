@@ -36,6 +36,8 @@ exports.submitQuestionnaireInteret = onRequest(
   {
     region: "us-central1",
     cors: [
+      "https://jolabsolutions.com",
+      "https://www.jolabsolutions.com",
       "https://jolab-14e57.web.app",
       "https://jolab-14e57.firebaseapp.com",
       "http://localhost:5173",

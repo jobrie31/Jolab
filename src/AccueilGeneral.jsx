@@ -71,6 +71,8 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
   const activeTitleTimeoutRef = useRef(null);
   const [showStickyMenu, setShowStickyMenu] = useState(false);
   const [activeTitle, setActiveTitle] = useState("");
+  const [videoRatios, setVideoRatios] = useState({});
+  const [videoOrientations, setVideoOrientations] = useState({});
 
   useEffect(() => {
     const videos = serviceVideoRefs.current.filter(Boolean);
@@ -134,6 +136,31 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
   const setServiceVideoRef = (index) => (element) => {
     serviceVideoRefs.current[index] = element;
+  };
+
+  const handleServiceVideoMetadata = (index) => (event) => {
+    const video = event.currentTarget;
+    const width = video.videoWidth || 16;
+    const height = video.videoHeight || 9;
+    const ratio = width / height;
+
+    let orientation = "wide";
+
+    if (ratio < 0.85) {
+      orientation = "tall";
+    } else if (ratio < 1.25) {
+      orientation = "square";
+    }
+
+    setVideoRatios((previousRatios) => ({
+      ...previousRatios,
+      [index]: `${width} / ${height}`,
+    }));
+
+    setVideoOrientations((previousOrientations) => ({
+      ...previousOrientations,
+      [index]: orientation,
+    }));
   };
 
   const scrollToTop = () => {
@@ -337,6 +364,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             display: inline-flex;
             align-items: center;
             gap: 10px;
+            flex: 0 0 auto;
           }
 
           .sticky-page-logo:hover {
@@ -362,6 +390,9 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             letter-spacing: 0.01em;
             white-space: nowrap;
             box-shadow: 0 8px 18px rgba(220, 38, 38, 0.12);
+            max-width: 100%;
+            overflow: hidden;
+            text-overflow: ellipsis;
           }
 
           .sticky-promo-badge span {
@@ -373,8 +404,12 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             display: flex;
             align-items: center;
             justify-content: flex-end;
-            gap: 22px;
-            flex-wrap: wrap;
+            gap: clamp(9px, 1.25vw, 22px);
+            flex-wrap: nowrap;
+            min-width: 0;
+            max-width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
           }
 
           .sticky-page-menu button {
@@ -383,12 +418,16 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             padding: 0;
             background: transparent;
             color: #334155;
-            font-size: 13px;
+            font-size: clamp(11px, 0.95vw, 13px);
             font-weight: 700;
             cursor: pointer;
             transition:
               color 0.2s ease,
               opacity 0.2s ease;
+            white-space: nowrap;
+            flex: 0 1 auto;
+            min-width: 0;
+            letter-spacing: clamp(-0.025em, -0.10vw, 0em);
           }
 
           .sticky-page-menu button:hover {
@@ -398,11 +437,12 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
           .sticky-contact-button {
             border-radius: 999px !important;
-            padding: 7px 13px !important;
+            padding: 7px clamp(8px, 1vw, 13px) !important;
             background: #0f172a !important;
             color: white !important;
             font-weight: 800 !important;
             box-shadow: none !important;
+            flex: 0 1 auto !important;
           }
 
           .sticky-contact-button:hover {
@@ -462,6 +502,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             justify-content: space-between;
             padding: 24px 18px;
             max-width: 100%;
+            gap: 16px;
           }
 
           .hero-logo {
@@ -481,6 +522,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             display: inline-flex;
             align-items: center;
             gap: 13px;
+            flex: 0 0 auto;
           }
 
           .hero-logo:hover {
@@ -490,23 +532,30 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
           .hero-menu {
             display: flex;
-            gap: 12px;
+            gap: clamp(6px, 1vw, 12px);
             align-items: center;
-            flex-wrap: wrap;
+            justify-content: flex-end;
+            flex-wrap: nowrap;
             max-width: 100%;
+            min-width: 0;
+            overflow: hidden;
+            white-space: nowrap;
           }
 
           .hero-menu button {
             background: rgba(255,255,255,0.07);
             border: 1px solid rgba(255,255,255,0.14);
             color: rgba(255,255,255,0.92);
-            padding: 10px 16px;
+            padding: 10px clamp(8px, 1.15vw, 16px);
             border-radius: 999px;
-            font-size: 14px;
+            font-size: clamp(11px, 1vw, 14px);
             font-weight: 750;
             cursor: pointer;
             backdrop-filter: blur(10px);
             transition: 0.25s ease;
+            white-space: nowrap;
+            flex: 0 1 auto;
+            min-width: 0;
           }
 
           .hero-menu button:hover {
@@ -516,7 +565,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
           }
 
           .hero-menu .hero-contact-button {
-            padding: 10px 17px;
+            padding: 10px clamp(9px, 1.2vw, 17px);
             background: rgba(245, 158, 11, 0.22);
             color: #fff7ed;
             border: 1px solid rgba(251, 191, 36, 0.42);
@@ -663,13 +712,48 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             min-width: 0;
           }
 
+          .personnalise-main-line {
+            font-size: clamp(17px, 4.8vw, 38px);
+            line-height: 1.18;
+            color: #f8fafc;
+            max-width: 1080px;
+            margin: 0 auto;
+            font-weight: 760;
+            text-shadow: 0 8px 28px rgba(0,0,0,0.54);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: clip;
+          }
+
           .home-custom-tags-grid {
             display: grid;
             grid-template-columns: repeat(3, minmax(0, 1fr));
-            gap: 16px;
+            gap: clamp(10px, 1.2vw, 16px);
             max-width: 100%;
             margin-left: auto;
             margin-right: auto;
+          }
+
+          .home-custom-tag-card {
+            background: rgba(255,255,255,0.16);
+            border: 1px solid rgba(255,255,255,0.28);
+            border-radius: 18px;
+            padding: clamp(15px, 1.8vw, 24px) clamp(8px, 1.4vw, 18px);
+            text-align: center;
+            font-weight: 950;
+            font-size: clamp(17px, 1.75vw, 28px);
+            line-height: 1.12;
+            color: #ffffff;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 14px 32px rgba(0,0,0,0.20);
+            min-width: 0;
+            overflow-wrap: break-word;
+            word-break: normal;
+            hyphens: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: clamp(62px, 6vw, 88px);
           }
 
           .home-services-list {
@@ -677,6 +761,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             gap: 56px;
             width: 100%;
             max-width: 100%;
+            overflow: hidden;
           }
 
           .availability-band {
@@ -783,7 +868,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
           .availability-image-label {
             position: absolute;
             left: 12px;
-            bottom: 12px;
+            bottom: 7px;
             background: rgba(15,23,42,0.82);
             color: white;
             padding: 7px 11px;
@@ -796,7 +881,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
           .home-service-row {
             display: grid;
-            grid-template-columns: minmax(320px, 0.72fr) minmax(650px, 1.8fr);
+            grid-template-columns: minmax(280px, 0.72fr) minmax(0, 1.8fr);
             gap: 44px;
             align-items: center;
             background: rgba(255,255,255,0.84);
@@ -810,10 +895,12 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             width: 100%;
             max-width: 100%;
             min-width: 0;
+            overflow: hidden;
+            contain: layout paint;
           }
 
           .home-service-row:nth-child(even) {
-            grid-template-columns: minmax(650px, 1.8fr) minmax(320px, 0.72fr);
+            grid-template-columns: minmax(0, 1.8fr) minmax(280px, 0.72fr);
           }
 
           .home-service-row:nth-child(even) .home-service-text {
@@ -826,6 +913,20 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
           .home-service-text {
             min-width: 0;
+            max-width: 100%;
+            overflow: hidden;
+            text-align: center;
+          }
+
+          .home-service-heading {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 22px;
+            margin: 0 0 20px 0;
+            width: 100%;
+            max-width: 100%;
           }
 
           .home-service-icon {
@@ -837,13 +938,35 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             align-items: center;
             justify-content: center;
             font-size: 48px;
-            margin-bottom: 28px;
+            margin: 0;
             border: 1px solid #dbeafe;
             box-shadow: 0 14px 32px rgba(37,99,235,0.14);
+            flex: 0 0 auto;
+          }
+
+          .home-service-title {
+            margin: 0;
+            font-size: clamp(38px, 3.9vw, 62px);
+            line-height: 1.02;
+            font-weight: 950;
+            color: #0f172a;
+            letter-spacing: -0.055em;
+            overflow-wrap: break-word;
+            max-width: 100%;
+          }
+
+          .home-service-description {
+            margin: 0;
+            color: #475569;
+            font-size: clamp(19px, 1.45vw, 24px);
+            line-height: 1.62;
+            font-weight: 550;
+            overflow-wrap: break-word;
           }
 
           .home-service-preview {
-            min-height: 560px;
+            aspect-ratio: var(--video-ratio, 16 / 9);
+            min-height: auto;
             border-radius: 34px;
             background:
               radial-gradient(circle at 30% 25%, rgba(96,165,250,0.34), transparent 30%),
@@ -863,26 +986,32 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             width: 100%;
             max-width: 100%;
             min-width: 0;
+            align-self: center;
+            justify-self: center;
+            transition:
+              max-width 0.25s ease,
+              aspect-ratio 0.25s ease;
           }
 
-          .home-service-preview::before {
-            content: "";
-            position: absolute;
-            inset: 18px;
-            border-radius: 26px;
-            border: 1px solid rgba(255,255,255,0.18);
-            pointer-events: none;
-            z-index: 3;
+          .home-service-preview.video-square {
+            width: min(100%, 660px);
+          }
+
+          .home-service-preview.video-tall {
+            width: min(100%, 470px);
           }
 
           .home-service-video {
             position: absolute;
             inset: 0;
             width: 100%;
+            max-width: 100%;
             height: 100%;
             object-fit: contain;
+            object-position: center center;
             z-index: 1;
             background: #020617;
+            display: block;
           }
 
           .home-service-video::-webkit-media-controls {
@@ -1123,6 +1252,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
           .contact-info-area {
             text-align: left;
+            min-width: 0;
           }
 
           .company-name {
@@ -1137,9 +1267,14 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
           .creator-line {
             margin: 12px 0 20px 0;
             color: #475569;
-            font-size: 18px;
-            line-height: 1.45;
+            font-size: clamp(13px, 1.45vw, 18px);
+            line-height: 1.25;
             font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: clip;
+            max-width: 100%;
+            letter-spacing: -0.025em;
           }
 
           .service-quebec-badge {
@@ -1406,15 +1541,70 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
               padding: 26px;
             }
 
+            .creator-line {
+              text-align: center;
+              font-size: clamp(13px, 1.9vw, 18px);
+            }
+
             .sticky-promo-badge {
               font-size: 12px;
               padding: 6px 12px;
+            }
+
+            .home-service-row,
+            .home-service-row:nth-child(even) {
+              grid-template-columns: 1fr;
+              gap: 32px;
+              padding: 24px;
+            }
+
+            .home-service-row:nth-child(even) .home-service-text,
+            .home-service-row:nth-child(even) .home-service-preview {
+              order: initial;
+            }
+
+            .home-service-heading {
+              flex-direction: row;
+              justify-content: center;
+              align-items: center;
+              gap: 18px;
+              margin-bottom: 18px;
+            }
+
+            .home-service-icon {
+              width: 78px;
+              height: 78px;
+              border-radius: 22px;
+              font-size: 38px;
+            }
+
+            .home-service-title {
+              text-align: left;
+              font-size: clamp(34px, 5vw, 58px);
+            }
+
+            .home-service-description {
+              text-align: center;
+            }
+
+            .home-service-preview {
+              width: 100%;
+            }
+
+            .home-service-preview.video-square {
+              width: 100%;
+              max-width: 100%;
+            }
+
+            .home-service-preview.video-tall {
+              width: 100%;
+              max-width: 100%;
             }
           }
 
           @media (max-width: 980px) {
             .home-custom-tags-grid {
-              grid-template-columns: repeat(2, minmax(0, 1fr));
+              grid-template-columns: repeat(3, minmax(0, 1fr));
             }
 
             .personnalise-card {
@@ -1434,24 +1624,34 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             }
 
             .home-service-row {
-              padding: 38px;
+              padding: 20px;
               border-radius: 34px;
             }
 
             .home-service-preview {
-              min-height: 440px;
+              width: 100%;
+            }
+
+            .home-service-preview.video-square {
+              width: 100%;
+              max-width: 100%;
+            }
+
+            .home-service-preview.video-tall {
+              width: 100%;
+              max-width: 100%;
             }
 
             .availability-images {
-              grid-template-columns: 1fr;
+              grid-template-columns: repeat(2, minmax(0, 1fr));
             }
 
             .availability-image-card {
-              height: 310px;
+              height: 250px;
             }
 
             .availability-image-card img {
-              max-height: 290px;
+              max-height: 230px;
             }
 
             .sticky-page-nav {
@@ -1469,6 +1669,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
               grid-column: 1;
               grid-row: 1;
               min-width: 0;
+              white-space: nowrap;
             }
 
             .sticky-promo-badge {
@@ -1486,44 +1687,55 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             .sticky-page-menu {
               grid-column: 2;
               grid-row: 1;
-              justify-content: space-between;
+              justify-content: flex-end;
               flex-wrap: nowrap;
               width: 100%;
               max-width: 100%;
               min-width: 0;
               overflow: hidden;
-              gap: clamp(7px, 1.6vw, 14px);
+              gap: clamp(7px, 1.25vw, 12px);
             }
 
             .sticky-page-menu button {
               white-space: nowrap;
-              flex: 0 0 auto;
+              flex: 0 1 auto;
               min-width: 0;
-              font-size: clamp(11px, 1.8vw, 13px);
+              font-size: clamp(10.6px, 1.55vw, 13px);
             }
           }
 
           @media (max-width: 760px) {
+            .services-section {
+              padding-left: 4px !important;
+              padding-right: 4px !important;
+            }
+
+            .home-services-list {
+              gap: 34px;
+            }
+
             .sticky-page-nav {
               top: 0;
               width: 100%;
               min-height: auto;
+              display: grid;
               grid-template-columns: auto minmax(0, 1fr);
               grid-template-rows: auto auto;
               align-items: center;
-              gap: 7px 12px;
+              justify-content: stretch;
+              gap: 7px 10px;
               padding: 8px 7px 9px 7px;
             }
 
             .sticky-page-logo {
+              grid-column: 1;
+              grid-row: 1;
+              justify-self: start;
               font-size: 13px;
               letter-spacing: 0.09em;
-              gap: 0;
-              padding-right: 4px;
-            }
-
-            .sticky-page-logo span {
-              display: none;
+              gap: 8px;
+              padding: 0;
+              white-space: nowrap;
             }
 
             .sticky-brand-logo-img {
@@ -1535,6 +1747,8 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
               grid-column: 1 / -1;
               grid-row: 2;
               justify-self: center;
+              position: static;
+              transform: none;
               font-size: clamp(10px, 2.7vw, 12px);
               padding: 6px 10px;
             }
@@ -1542,25 +1756,27 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             .sticky-page-menu {
               grid-column: 2;
               grid-row: 1;
-              justify-content: space-between;
-              gap: clamp(5px, 1.6vw, 10px);
+              justify-self: end;
+              justify-content: flex-end;
+              gap: clamp(5px, 1.15vw, 9px);
               flex-wrap: nowrap;
               width: 100%;
               max-width: 100%;
               min-width: 0;
               overflow: hidden;
+              white-space: nowrap;
             }
 
             .sticky-page-menu button {
-              font-size: clamp(10px, 2.75vw, 12px);
+              font-size: clamp(9.4px, 2.25vw, 12px);
               white-space: nowrap;
-              flex: 0 0 auto;
+              flex: 0 1 auto;
               min-width: 0;
-              letter-spacing: -0.012em;
+              letter-spacing: -0.03em;
             }
 
             .sticky-contact-button {
-              padding: 6px clamp(6px, 2vw, 10px) !important;
+              padding: 6px clamp(5px, 1.7vw, 9px) !important;
             }
 
             .hero-majestic {
@@ -1569,6 +1785,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
             .hero-nav {
               flex-direction: column;
+              align-items: center;
               gap: 14px;
               padding: 18px 8px 0 8px;
             }
@@ -1594,7 +1811,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             }
 
             .hero-menu button {
-              font-size: clamp(9px, 2.7vw, 13px);
+              font-size: clamp(9.4px, 2.65vw, 13px);
               padding: 8px clamp(5px, 1.7vw, 10px);
               white-space: nowrap;
               flex: 0 1 auto;
@@ -1620,24 +1837,81 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
               padding: 48px 18px;
             }
 
-            .home-service-row {
-              padding: 24px;
-              border-radius: 26px;
+            .personnalise-main-line {
+              font-size: clamp(13px, 4.15vw, 30px);
+              max-width: 100%;
+              letter-spacing: -0.04em;
             }
 
-            .home-service-preview {
-              min-height: 320px;
-              border-radius: 22px;
+            .home-custom-tags-grid {
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+              gap: 7px;
+              margin-top: 24px !important;
+            }
+
+            .home-custom-tag-card {
+              border-radius: 12px;
+              padding: 12px 4px;
+              font-size: clamp(10px, 2.8vw, 15px);
+              min-height: 52px;
+              line-height: 1.05;
+              letter-spacing: -0.035em;
+            }
+
+            .home-service-row {
+              padding: 4px;
+              border-radius: 24px;
+              gap: 6px;
+            }
+
+            .home-service-heading {
+              gap: 8px;
+              margin-bottom: 4px;
+            }
+
+            .home-service-description {
+              line-height: 1.32;
+              margin-bottom: 0;
             }
 
             .home-service-icon {
-              width: 82px;
-              height: 82px;
-              font-size: 40px;
+              width: 70px;
+              height: 70px;
+              border-radius: 19px;
+              font-size: 34px;
+            }
+
+            .home-service-title {
+              font-size: clamp(28px, 7vw, 46px);
+            }
+
+            .home-service-preview {
+              width: 100%;
+              max-width: 100%;
+              margin-left: 0;
+              transform: none;
+              border-radius: 22px;
+            }
+
+            .home-service-preview.video-wide {
+              width: 100%;
+              max-width: 100%;
+              aspect-ratio: 16 / 9;
+              min-height: clamp(210px, 56vw, 360px);
+            }
+
+            .home-service-preview.video-square {
+              width: 100%;
+              max-width: 100%;
+            }
+
+            .home-service-preview.video-tall {
+              width: 100%;
+              max-width: 100%;
             }
 
             .availability-band {
-              padding: 18px;
+              padding: 16px 10px 18px 10px;
               border-radius: 24px;
               margin-bottom: 36px;
             }
@@ -1647,13 +1921,26 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
               font-size: clamp(22px, 6vw, 32px);
             }
 
+            .availability-images {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              gap: 8px;
+            }
+
             .availability-image-card {
-              height: 250px;
+              height: 185px;
               border-radius: 18px;
+              padding: 6px;
             }
 
             .availability-image-card img {
-              max-height: 230px;
+              max-height: 165px;
+            }
+
+            .availability-image-label {
+              left: 6px;
+              bottom: 3px;
+              padding: 5px 7px;
+              font-size: clamp(9px, 2.3vw, 12px);
             }
 
             .home-benefits-grid {
@@ -1697,6 +1984,16 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
               text-align: center;
             }
 
+            .company-name {
+              font-size: clamp(28px, 7vw, 40px);
+            }
+
+            .creator-line {
+              font-size: clamp(10.5px, 2.95vw, 16px);
+              letter-spacing: -0.055em;
+              text-align: center;
+            }
+
             .service-quebec-badge {
               justify-content: center;
             }
@@ -1710,25 +2007,147 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             }
           }
 
+          @media (max-width: 650px) {
+            .services-section {
+              padding-left: 2px !important;
+              padding-right: 2px !important;
+            }
+
+            .home-services-list {
+              gap: 30px;
+            }
+
+            .sticky-page-logo span {
+              display: none;
+            }
+
+            .sticky-page-logo {
+              grid-column: 1;
+              grid-row: 1;
+              justify-self: start;
+              gap: 0;
+              padding: 0;
+              white-space: nowrap;
+            }
+
+            .sticky-brand-logo-img {
+              width: 25px;
+              height: 25px;
+            }
+
+            .sticky-page-nav {
+              display: grid;
+              grid-template-columns: auto minmax(0, 1fr);
+              grid-template-rows: auto auto;
+              align-items: center;
+              justify-content: stretch;
+              gap: 7px 10px;
+              padding: 8px 7px 9px 7px;
+            }
+
+            .sticky-page-menu {
+              grid-column: 2;
+              grid-row: 1;
+              justify-self: end;
+              justify-content: flex-end;
+              width: 100%;
+              max-width: 100%;
+              min-width: 0;
+              gap: clamp(5px, 1.15vw, 8px);
+              flex-wrap: nowrap;
+              overflow: hidden;
+              white-space: nowrap;
+            }
+
+            .sticky-page-menu button {
+              font-size: clamp(9.4px, 2.25vw, 11.5px);
+              letter-spacing: -0.045em;
+              white-space: nowrap;
+              flex: 0 1 auto;
+              min-width: 0;
+            }
+
+            .sticky-contact-button {
+              padding: 5px clamp(5px, 1.5vw, 8px) !important;
+            }
+
+            .sticky-promo-badge {
+              grid-column: 1 / -1;
+              grid-row: 2;
+              justify-self: center;
+              position: static;
+              transform: none;
+              font-size: clamp(9.5px, 2.45vw, 11.5px);
+              padding: 5px 9px;
+              max-width: calc(100vw - 14px);
+            }
+
+            .home-custom-tags-grid {
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+
+            .home-service-row {
+              padding-left: 2px;
+              padding-right: 2px;
+              gap: 5px;
+            }
+
+            .home-service-preview {
+              width: 100%;
+              max-width: 100%;
+              margin-left: 0;
+              transform: none;
+            }
+
+            .home-service-preview.video-wide {
+              width: 100%;
+              max-width: 100%;
+              aspect-ratio: 16 / 9;
+              min-height: clamp(220px, 58vw, 370px);
+            }
+
+            .home-service-preview.video-square {
+              width: 100%;
+              max-width: 100%;
+            }
+
+            .home-service-preview.video-tall {
+              width: 100%;
+              max-width: 100%;
+            }
+
+            .availability-images {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+            }
+          }
 
           @media (max-width: 420px) {
+            .services-section {
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+            }
+
+            .home-services-list {
+              gap: 26px;
+            }
+
             .hero-menu {
               gap: 4px;
             }
 
-            .sticky-page-menu {
-              gap: clamp(5px, 1.5vw, 8px);
-              justify-content: space-between;
+            .hero-menu button {
+              font-size: 8.8px;
+              letter-spacing: -0.025em;
             }
 
-            .hero-menu button {
-              font-size: 8.4px;
-              letter-spacing: -0.025em;
+            .sticky-page-menu {
+              gap: clamp(4px, 1.05vw, 7px);
+              justify-content: flex-end;
             }
 
             .sticky-page-menu button {
-              font-size: clamp(8.9px, 2.55vw, 10px);
-              letter-spacing: -0.025em;
+              font-size: clamp(8.9px, 2.22vw, 10.5px);
+              letter-spacing: -0.055em;
             }
 
             .hero-menu button {
@@ -1745,19 +2164,258 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             }
 
             .sticky-contact-button {
-              padding: 5px clamp(4px, 1.3vw, 6px) !important;
+              padding: 5px clamp(4px, 1.15vw, 6px) !important;
             }
-          }
 
-          @media (max-width: 650px) {
+            .personnalise-main-line {
+              font-size: clamp(11px, 3.75vw, 17px);
+              letter-spacing: -0.055em;
+            }
+
             .home-custom-tags-grid {
-              grid-template-columns: 1fr;
+              grid-template-columns: repeat(3, minmax(0, 1fr));
+              gap: 5px;
+            }
+
+            .home-custom-tag-card {
+              border-radius: 10px;
+              padding: 10px 3px;
+              font-size: clamp(8.4px, 2.55vw, 12px);
+              min-height: 46px;
+              line-height: 1.02;
+              letter-spacing: -0.055em;
+              box-shadow: 0 8px 18px rgba(0,0,0,0.16);
+            }
+
+            .home-service-heading {
+              gap: 6px;
+              margin-bottom: 3px;
+            }
+
+            .home-service-icon {
+              width: 58px;
+              height: 58px;
+              border-radius: 16px;
+              font-size: 28px;
+            }
+
+            .home-service-title {
+              font-size: clamp(23px, 6.4vw, 34px);
+              letter-spacing: -0.06em;
+            }
+
+            .creator-line {
+              font-size: clamp(9.2px, 2.72vw, 13px);
+              letter-spacing: -0.07em;
+            }
+
+            .home-service-row {
+              padding: 0;
+              gap: 4px;
+            }
+
+            .home-service-description {
+              line-height: 1.25;
+              margin-bottom: 0;
             }
 
             .home-service-preview {
-              min-height: 260px;
+              width: 100%;
+              max-width: 100%;
+              margin-left: 0;
+              transform: none;
+            }
+
+            .home-service-preview.video-wide {
+              width: 100%;
+              max-width: 100%;
+              aspect-ratio: 16 / 9;
+              min-height: clamp(225px, 60vw, 380px);
+            }
+
+            .home-service-preview.video-square {
+              width: 100%;
+              max-width: 100%;
+            }
+
+            .home-service-preview.video-tall {
+              width: 100%;
+              max-width: 100%;
+            }
+
+            .availability-band {
+              padding: 14px 8px 16px 8px;
+            }
+
+            .availability-images {
+              grid-template-columns: repeat(2, minmax(0, 1fr));
+              gap: 7px;
+            }
+
+            .availability-image-card {
+              height: 145px;
+              border-radius: 14px;
+              padding: 5px;
+            }
+
+            .availability-image-card img {
+              max-height: 128px;
+            }
+
+            .availability-image-label {
+              left: 5px;
+              bottom: 2px;
+              padding: 4px 5px;
+              font-size: clamp(7.5px, 2.25vw, 10px);
+              max-width: calc(100% - 10px);
+              white-space: nowrap;
+              overflow: hidden;
+              text-overflow: ellipsis;
             }
           }
+
+          /* MODIF MOBILE/TABLETTE :
+             Les vidéos de service se comportent comme une image agrandie par le coin.
+             Elles prennent la largeur maximale disponible et la hauteur suit le vrai ratio vidéo. */
+          @media (max-width: 1180px) {
+            .home-service-preview,
+            .home-service-preview.video-wide,
+            .home-service-preview.video-square,
+            .home-service-preview.video-tall {
+              width: 100% !important;
+              max-width: 100% !important;
+              aspect-ratio: var(--video-ratio, 16 / 9) !important;
+              height: auto !important;
+              min-height: 0 !important;
+              margin-left: 0 !important;
+              transform: none !important;
+              justify-self: stretch !important;
+              align-self: center !important;
+            }
+
+            .home-service-video {
+              width: 100% !important;
+              height: 100% !important;
+              object-fit: contain !important;
+              object-position: center center !important;
+            }
+          }
+
+          @media (max-width: 760px) {
+            .home-service-row {
+              padding-left: 4px !important;
+              padding-right: 4px !important;
+            }
+
+            .home-service-preview,
+            .home-service-preview.video-wide,
+            .home-service-preview.video-square,
+            .home-service-preview.video-tall {
+              width: 100% !important;
+              max-width: 100% !important;
+              aspect-ratio: var(--video-ratio, 16 / 9) !important;
+              height: auto !important;
+              min-height: 0 !important;
+            }
+          }
+
+          @media (max-width: 420px) {
+            .home-service-row {
+              padding-left: 0 !important;
+              padding-right: 0 !important;
+            }
+
+            .home-service-preview,
+            .home-service-preview.video-wide,
+            .home-service-preview.video-square,
+            .home-service-preview.video-tall {
+              width: 100% !important;
+              max-width: 100% !important;
+              aspect-ratio: var(--video-ratio, 16 / 9) !important;
+              height: auto !important;
+              min-height: 0 !important;
+            }
+          }
+
+          /* MODIF CONTACT :
+             Les informations de contact restent alignées à gauche sur mobile.
+             Le bloc "Prêt à discuter ?" reste centré. */
+          @media (max-width: 1180px) {
+            .contact-info-area {
+              text-align: left !important;
+            }
+
+            .company-name {
+              text-align: left !important;
+            }
+
+            .creator-line {
+              text-align: left !important;
+            }
+
+            .service-quebec-badge {
+              justify-content: flex-start !important;
+              text-align: left !important;
+            }
+
+            .contact-list {
+              justify-items: start !important;
+              text-align: left !important;
+            }
+
+            .contact-list-item {
+              justify-content: flex-start !important;
+              text-align: left !important;
+            }
+
+            .contact-action-area {
+              text-align: center !important;
+            }
+
+            .contact-action-title {
+              text-align: center !important;
+            }
+          }
+
+          @media (max-width: 760px) {
+            .contact-info-area {
+              text-align: left !important;
+            }
+
+            .company-name {
+              text-align: left !important;
+            }
+
+            .creator-line {
+              text-align: left !important;
+            }
+
+            .service-quebec-badge {
+              justify-content: flex-start !important;
+              text-align: left !important;
+            }
+
+            .contact-list {
+              justify-items: start !important;
+              text-align: left !important;
+            }
+
+            .contact-list-item {
+              justify-content: flex-start !important;
+              text-align: left !important;
+            }
+
+            .contact-action-area {
+              text-align: center !important;
+            }
+
+            .contact-action-title {
+              text-align: center !important;
+            }
+          }
+
+
+
         `}
       </style>
 
@@ -1887,7 +2545,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             >
               <h2
                 style={{
-                  fontSize: "clamp(48px, 4.6vw, 70px)",
+                  fontSize: "clamp(38px, 4.6vw, 70px)",
                   lineHeight: 1.02,
                   margin: "0 0 30px 0",
                   fontWeight: 850,
@@ -1899,24 +2557,13 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
                 Personnalisé, ça veut dire quoi ?
               </h2>
 
-              <p
-                style={{
-                  fontSize: "clamp(27px, 2.5vw, 38px)",
-                  lineHeight: 1.28,
-                  color: "#f8fafc",
-                  maxWidth: "1080px",
-                  margin: "0 auto",
-                  fontWeight: 760,
-                  textShadow: "0 8px 28px rgba(0,0,0,0.54)",
-                  overflowWrap: "break-word",
-                }}
-              >
+              <p className="personnalise-main-line">
                 On bâtit votre application de A à Z.
               </p>
 
               <p
                 style={{
-                  fontSize: "clamp(34px, 3.4vw, 50px)",
+                  fontSize: "clamp(27px, 3.4vw, 50px)",
                   lineHeight: 1.12,
                   color: "#bfdbfe",
                   maxWidth: "1040px",
@@ -1932,23 +2579,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
             <div className="home-custom-tags-grid" style={{ marginTop: "34px" }}>
               {customTags.map((item) => (
-                <div
-                  key={item}
-                  style={{
-                    background: "rgba(255,255,255,0.16)",
-                    border: "1px solid rgba(255,255,255,0.28)",
-                    borderRadius: "18px",
-                    padding: "24px 18px",
-                    textAlign: "center",
-                    fontWeight: 950,
-                    fontSize: "clamp(21px, 1.75vw, 28px)",
-                    color: "#ffffff",
-                    backdropFilter: "blur(10px)",
-                    boxShadow: "0 14px 32px rgba(0,0,0,0.20)",
-                    minWidth: 0,
-                    overflowWrap: "break-word",
-                  }}
-                >
+                <div key={item} className="home-custom-tag-card">
                   {item}
                 </div>
               ))}
@@ -1966,20 +2597,68 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
                 textAlign: "center",
                 boxShadow: "0 20px 46px rgba(15,23,42,0.25)",
                 backdropFilter: "blur(10px)",
+                overflow: "hidden",
               }}
             >
               <p
                 style={{
                   margin: 0,
-                  fontSize: "clamp(27px, 2.5vw, 38px)",
+                  fontSize: "clamp(24px, 2.5vw, 38px)",
                   lineHeight: 1.22,
                   fontWeight: 950,
                   letterSpacing: "-0.04em",
                   overflowWrap: "break-word",
                 }}
               >
-                On crée l’application ensemble, selon votre façon de travailler.
+                Une application qui simplifie votre gestion :
               </p>
+
+              <ul
+                style={{
+                  listStyle: "none",
+                  padding: 0,
+                  margin: "24px auto 0 auto",
+                  maxWidth: "820px",
+                  display: "grid",
+                  gap: "12px",
+                  textAlign: "left",
+                }}
+              >
+                {[
+                  "Toutes vos informations au même endroit",
+                  "Moins de temps perdu dans les suivis",
+                  "Moins d’erreurs qu’avec des fichiers Excel éparpillés",
+                  "Des accès adaptés pour chaque employé",
+                  "Une application qui évolue avec votre entreprise",
+                ].map((item) => (
+                  <li
+                    key={item}
+                    style={{
+                      display: "flex",
+                      alignItems: "flex-start",
+                      gap: "12px",
+                      color: "#334155",
+                      fontSize: "clamp(16px, 1.35vw, 22px)",
+                      lineHeight: 1.35,
+                      fontWeight: 800,
+                    }}
+                  >
+                    <span
+                      aria-hidden="true"
+                      style={{
+                        width: "10px",
+                        height: "10px",
+                        borderRadius: "999px",
+                        background: "linear-gradient(135deg, #2563eb, #0ea5e9)",
+                        flex: "0 0 auto",
+                        marginTop: "0.48em",
+                        boxShadow: "0 0 0 4px rgba(37,99,235,0.12)",
+                      }}
+                    />
+                    <span>{item}</span>
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         </div>
@@ -1987,9 +2666,11 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
       <section
         id="services"
+        className="services-section"
         style={{
-          padding: "0 24px 100px 24px",
+          padding: "0 clamp(4px, 2vw, 24px) 100px clamp(4px, 2vw, 24px)",
           background: "transparent",
+          overflow: "hidden",
         }}
       >
         <div style={{ maxWidth: "1600px", margin: "0 auto", width: "100%" }}>
@@ -2015,7 +2696,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
           <div className="availability-band">
             <h3 className="availability-simple-title">
-              Utilisable avec n’importe quel outil, de n’importe où
+              Utilisable avec n’importe quel appareil, de n’importe où
             </h3>
 
             <div className="availability-images">
@@ -2045,35 +2726,27 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
             {serviceCards.map((item, index) => (
               <div key={item.title} className="home-service-row">
                 <div className="home-service-text">
-                  <div className="home-service-icon">{item.icon}</div>
+                  <div className="home-service-heading">
+                    <div className="home-service-icon">{item.icon}</div>
 
-                  <h3
-                    style={{
-                      margin: "0 0 20px 0",
-                      fontSize: "clamp(38px, 3.9vw, 62px)",
-                      lineHeight: 1.02,
-                      fontWeight: 950,
-                      color: "#0f172a",
-                      letterSpacing: "-0.055em",
-                    }}
-                  >
-                    {item.title}
-                  </h3>
+                    <h3 className="home-service-title">{item.title}</h3>
+                  </div>
 
-                  <p
-                    style={{
-                      margin: 0,
-                      color: "#475569",
-                      fontSize: "clamp(19px, 1.45vw, 24px)",
-                      lineHeight: 1.62,
-                      fontWeight: 550,
-                    }}
-                  >
-                    {item.text}
-                  </p>
+                  <p className="home-service-description">{item.text}</p>
                 </div>
 
-                <div className="home-service-preview">
+                <div
+                  className={`home-service-preview ${
+                    videoOrientations[index]
+                      ? `video-${videoOrientations[index]}`
+                      : ""
+                  }`}
+                  style={
+                    videoRatios[index]
+                      ? { "--video-ratio": videoRatios[index] }
+                      : undefined
+                  }
+                >
                   <video
                     ref={setServiceVideoRef(index)}
                     className="home-service-video"
@@ -2081,6 +2754,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
                     controls
                     playsInline
                     preload="metadata"
+                    onLoadedMetadata={handleServiceVideoMetadata(index)}
                   >
                     <source src={item.video} type="video/mp4" />
                   </video>
@@ -2096,6 +2770,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
         style={{
           padding: "0 24px 100px 24px",
           background: "transparent",
+          overflow: "hidden",
         }}
       >
         <div className="pricing-section-card">
@@ -2177,6 +2852,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
         style={{
           padding: "0 24px 95px 24px",
           background: "transparent",
+          overflow: "hidden",
         }}
       >
         <div className="contact-section-card">
