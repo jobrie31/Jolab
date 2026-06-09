@@ -2879,7 +2879,7 @@ export default function AccueilGeneral({ onNavigate, onOpenContact }) {
 
                 <div className="contact-list-item">
                   <span className="contact-icon">✉</span>
-                  <span>jobrie31@hotmail.com</span>
+                  <span>jonathan@jolabsolutions.com</span>
                 </div>
 
                 <div className="contact-list-item">
